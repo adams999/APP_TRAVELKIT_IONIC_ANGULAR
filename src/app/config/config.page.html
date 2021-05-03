@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="menuConfig">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" class="btnMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="tituloMenu">
+      {{ 'CONFIG.configuracion' | translate | uppercase }} <ion-icon name="options"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="arribaRefresh($event)" class="refresher">
+    <ion-refresher-content pullingIcon="arrow-down" refreshingSpinner="dots"></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-item>
+    <ion-label fill="floating">{{ 'CONFIG.idioma' | translate }}</ion-label>
+    <ion-select [(ngModel)]="idioma" #langSelect placeholder="Selecciona Idioma"
+      (ionChange)="[translate.use(langSelect.value), paramIdioma(idioma) ]" okText="{{ 'CONFIG.aceptar' | translate }}"
+      cancelText="{{ 'CONFIG.cancelar' | translate }}">
+      <ion-select-option *ngFor="let leng of lenguajes" value="{{leng.value}}">{{ 'CONFIG.'+leng.name | translate }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    {{ 'CONFIG.tema_oscuro' | translate }}
+    <ion-toggle [(ngModel)]="toggledDark" (ionChange)="colorTheme()" slot="end"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    {{ 'CONFIG.so' | translate }} {{so}} &nbsp;
+    <ion-icon *ngIf="so == 'Android'" name="logo-android">
+    </ion-icon>
+    <ion-icon *ngIf="so == 'iOS' || so == 'iphone'|| so == 'mac'|| so == 'ipad' || so == 'mobile'" name="logo-apple">
+    </ion-icon>
+    <ion-icon *ngIf="so == 'browser'" name="logo-windows">
+    </ion-icon>
+  </ion-item>
+
+  <ion-item>
+    {{ 'CONFIG.v_so' | translate }} {{this.device.version}}
+  </ion-item>
+
+  <ion-item>
+    {{ 'CONFIG.manufactura' | translate }} {{this.device.manufacturer}}
+  </ion-item>
+
+  <ion-item>
+    {{ 'CONFIG.modelo' | translate }} {{this.device.model}} &nbsp;
+    <ion-icon name="phone-landscape"></ion-icon>
+  </ion-item>
+
+  <ion-item>
+    {{ 'CONFIG.uuid' | translate }} {{this.device.uuid}}
+  </ion-item>
+
+  <ion-item *ngIf="ip">
+    {{ 'CONFIG.ip' | translate }}
+    <ion-icon name="wifi">
+    </ion-icon>&nbsp;
+    {{ip}}
+  </ion-item>
+
+  <ion-item>
+    {{ 'CONFIG.v_app' | translate }} &nbsp;
+    <ion-icon color="ilsAdmin" name="information-circle">
+    </ion-icon>
+    {{ appVersionVar }}
+  </ion-item>
+
+</ion-content>
+
+<ion-footer class="classFooter">
+  <ion-toolbar class="footerToolbar">
+    <ion-title class=footerTitle> {{ 'FOOTER.pwils' | translate }} </ion-title>
+  </ion-toolbar>
+</ion-footer>

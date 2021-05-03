@@ -1,0 +1,293 @@
+<ion-header>
+
+  <ion-toolbar class="menu ion-text-wrap" [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+
+    <ion-title class="ion-text-wrap tituloPlans"> {{ 'GET-PLANS.planes' | translate | uppercase }} &nbsp;
+      <ion-icon name="cash"></ion-icon>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="outline" size="small" [disabled]="!isToggled == true" (click)="cotizarSeleccion()"
+        class="btnCotizar">
+        {{ 'GET-PLANS.cotizar' | translate }}
+      </ion-button>&nbsp;&nbsp;
+      <ion-button (click)="cerrarModal()">
+        <ion-icon item-right class="iconCerrarModal" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <img src="../../assets/imgs/ventana-avion.jpg" />
+    <div class="card-title">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="5">
+          </ion-col>
+          <ion-col size="2" class="colImg">
+            <img class="imgLogo" [src]="logo" />
+          </ion-col>
+          <ion-col size="5">
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <b class="tituloImgAgencia">{{ nomClient }}</b> <br> {{ 'GET-PLANS.vuelo' | translate }} {{ parametros[2] }} -
+      {{ parametros[3] }}
+      <p *ngIf="diasViaje" class="pDiasViaje"> <b>{{ 'GET-PLANS.dias_de_viaje' | translate }} </b> {{ diasViaje }}</p>
+    </div>
+    <div class="card-subtitle">
+      <b>{{ 'GET-PLANS.categoria' | translate }} </b> {{ parametros[4] }}<br><br>
+      <div class="card-subtitle">
+        <b>{{ 'GET-PLANS.origen' | translate }} </b> {{ parametros[8] }} <b>{{ 'GET-PLANS.destino' | translate }}</b>
+        {{ parametros[9] }}
+        <br><br>
+        <b>{{ 'GET-PLANS.pasajeros' | translate }}</b> {{ parametros[6].length }}
+        <br><b>{{ 'GET-PLANS.edades_pasajeros' | translate }}</b> {{ parametros[6] }}
+      </div>
+    </div>
+  </ion-card>
+
+  <ion-list>
+    <ion-item class="togledTodo" *ngIf="precios.length > 1">
+      <ion-label class="togledTodoLabel" [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'GET-PLANS.sel_todo' | translate }}
+      </ion-label>
+
+      <ion-label class="togledTodoLabel" *ngIf="precios.length > 1">
+        <ion-icon name="caret-forward"></ion-icon>
+      </ion-label>
+
+      <ion-toggle class="botonToggle" [(ngModel)]="togledTodos" *ngIf="precios.length > 1"
+        (ngModelChange)="selecTodos(togledTodos)"></ion-toggle>
+
+    </ion-item>
+
+    <form [formGroup]="formPrecios">
+      <ion-grid ion-row>
+        <ion-item *ngFor="let precio of precios, let i = index" [formGroupName]="i" class="ion-text-wrap">
+
+          <!-- precios para precios version antigua -->
+          <ion-col size="10" class="ion-align-self-center ion-text-wrap" *ngIf="precio.calc_new == undefined">
+
+            <ion-label class="labelDescPrice ion-text-wrap">
+              <h2 class="namePlan"><b>{{ precio.name_plan }}</b> </h2>
+              <p *ngIf="precio.planfamiliar && precio.planfamiliar == 1">
+                {{ 'GET-PLANS.plan_familiar' | translate }} <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                  name="checkmark"></ion-icon>
+              </p>
+              <p *ngIf="precio.planpareja && precio.planpareja == 1">
+                {{ 'GET-PLANS.plan_pareja' | translate }} <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                  name="checkmark"></ion-icon>
+              </p>
+
+              <div
+                *ngIf="precio.valorMenor && precio.valorMenor > 0 && precio.subTotalMenores && precio.subTotalMenores > 0">
+                <p>
+                  {{ 'GET-PLANS.precio' | translate }}
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precio.valorMenor | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                    {{ precio.moneda }}
+                  </a>
+                </p>
+                <div *ngIf=" precio.planpareja && precio.planpareja == 1 || precio.planfamiliar &&
+              precio.planfamiliar == 1 ">
+                  <p>
+                    {{ 'GET-PLANS.precio_promocion' | translate }}:
+                    <a [ngStyle]=" {'color': COLOR_MENU_BACKEND}">
+                      {{ precio.USDTotal / parametros[6].length | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                      {{ precio.moneda }}
+                    </a>
+                  </p>
+                </div>
+                <p>
+                  {{ 'GET-PLANS.sub_total' | translate }}
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precio.subTotalMenores | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                    {{ precio.moneda }}
+                  </a>
+                </p>
+
+                <div class="divPasaj">
+                  <ion-text class="nPasaj" [ngStyle]="{'color': COLOR_MENU_BACKEND}" *ngIf="precio.numero_menores > 1">
+                    {{ precio.numero_menores }} {{ 'GET-PLANS.pasajeross' | translate }}
+                    ({{ precio.min_age + ' - ' + precio.normal_age }} {{ 'GET-PLANS.years' | translate }})
+                  </ion-text>
+                  <ion-text class="nPasaj" [ngStyle]="{'color': COLOR_MENU_BACKEND}" *ngIf="precio.numero_menores <= 1">
+                    {{ precio.numero_menores }} {{ 'GET-PLANS.pasajero' | translate }}
+                    ({{ precio.min_age + ' - ' + precio.normal_age }} {{ 'GET-PLANS.years' | translate }})
+                  </ion-text>
+                </div>
+              </div>
+
+              <div
+                *ngIf="precio.valorMayor && precio.valorMayor > 0 && precio.subTotalMayor && precio.subTotalMayor > 0"
+                [ngStyle]="{'border-color': COLOR_MENU_BACKEND}" class="divPrecios">
+                <p>
+                  <ion-icon name="alert" color="warning"></ion-icon> {{ 'GET-PLANS.prec_exc_edad' | translate }}<br>
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precio.valorMayor | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                    {{ precio.moneda }}
+                  </a>
+                </p>
+                <div *ngIf=" precio.planpareja && precio.planpareja == 1 || precio.planfamiliar &&
+              precio.planfamiliar == 1 ">
+                  <p>
+                    {{ 'GET-PLANS.precio_promocion' | translate }}:
+                    <a [ngStyle]=" {'color': COLOR_MENU_BACKEND}">
+                      {{ precio.USDTotal / parametros[6].length | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                      {{ precio.moneda }}
+                    </a>
+                  </p>
+                </div>
+                <p>
+                  <ion-icon name="alert" color="warning"></ion-icon>
+                  {{ 'GET-PLANS.sub_total_exc_edad' | translate }}<br>
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precio.subTotalMayor | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                    {{ precio.moneda }}
+                  </a>
+                </p>
+
+                <div class="divPasaj">
+                  <ion-text class="nPasaj" [ngStyle]="{'color': COLOR_MENU_BACKEND}" *ngIf="precio.numero_mayores > 1">
+                    {{ precio.numero_mayores }} {{ 'GET-PLANS.pass_exc_edad' | translate }}
+                    ({{ (precio.normal_age + 1) + ' - ' + precio.max_age }} {{ 'GET-PLANS.years' | translate }})
+                  </ion-text>
+                  <ion-text class="nPasaj" [ngStyle]="{'color': COLOR_MENU_BACKEND}" *ngIf="precio.numero_mayores <= 1">
+                    {{ precio.numero_mayores }} {{ 'GET-PLANS.pas_exc_edad' | translate }}
+                    ({{ (precio.normal_age + 1) + ' - ' + precio.max_age }} {{ 'GET-PLANS.years' | translate }})
+                  </ion-text>
+                </div>
+              </div>
+
+              <div class="divTotal" [ngStyle]="{'border-color': COLOR_MENU_BACKEND}">
+                <p>
+                  <b>{{ 'GET-PLANS.total' | translate }}</b>
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precio.USDTotal | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }} {{ precio.moneda }}
+                  </a>
+                </p>
+              </div>
+
+            </ion-label>
+
+            <ion-grid class="align-items-center">
+              <ion-row>
+                <ion-col size="12" class="ion-align-self-center">
+                  <ion-button fill="clear" expand="full" [ngStyle]="{'background': COLOR_MENU_BACKEND}"
+                    class="btnComprar" (click)="modalFromPago(precio)">
+                    <ion-icon class="iconComprar" name="cash"></ion-icon>
+                    &nbsp; {{ 'GET-PLANS.comprar' | translate }}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+          </ion-col>
+
+
+
+
+
+
+
+          <!-- Visualizacion para calculos nuevos -->
+          <ion-col size="10" class="ion-align-self-center ion-text-wrap" *ngIf="precio.calc_new == 'Y'">
+
+            <ion-label class=" labelDescPrice ion-text-wrap">
+              <h2 class="namePlan"><b>{{ precio.name_plan }}</b> </h2>
+              <p *ngIf="precio.planfamiliar && precio.planfamiliar == 1">
+                {{ 'GET-PLANS.plan_familiar' | translate }} <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                  name="checkmark"></ion-icon>
+              </p>
+              <p *ngIf="precio.planpareja && precio.planpareja == 1">
+                {{ 'GET-PLANS.plan_pareja' | translate }} <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                  name="checkmark"></ion-icon>
+              </p>
+
+              <div *ngFor="let precioRecarg of precio.arrUSDUsedPrices;let p = index" class="divPrecios">
+                <p>
+                  {{ 'GET-PLANS.precio' | translate }}
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precioRecarg.pvpBase | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                    {{ precio.moneda }}
+                  </a>
+                </p>
+
+                <div *ngIf=" precio.planpareja && precio.planpareja == 1 || precio.planfamiliar &&
+              precio.planfamiliar == 1 ">
+                  <p>
+                    {{ 'GET-PLANS.precio_promocion' | translate }}:
+                    <a [ngStyle]=" {'color': COLOR_MENU_BACKEND}">
+                      {{ precioRecarg.pvp | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                      {{ precio.moneda }}
+                    </a>
+                  </p>
+                </div>
+
+                <p>
+                  {{ 'GET-PLANS.sub_total' | translate }}
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precioRecarg.pvpSubTotal | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }}
+                    {{ precio.moneda }}
+                  </a>
+                </p>
+
+                <div class="divPasaj">
+                  <ion-text class="nPasaj" [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precioRecarg.numPas }} {{ 'GET-PLANS.pasajeross' | translate }}
+                    ({{ precioRecarg.ageMin + ' - ' + precioRecarg.ageMax }} {{ 'GET-PLANS.years' | translate }})
+                  </ion-text>
+                </div>
+              </div>
+
+
+              <div class="divTotal" [ngStyle]="{'border-color': COLOR_MENU_BACKEND}">
+                <p>
+                  <b>{{ 'GET-PLANS.total' | translate }}</b>
+                  <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                    {{ precio.USDTotal | TasaCambioPipe :precio.tasa_cambio | number : '1.2-2' }} {{ precio.moneda }}
+                  </a>
+                </p>
+              </div>
+
+            </ion-label>
+
+            <ion-grid class="align-items-center">
+              <ion-row>
+                <ion-col size="12" class="ion-align-self-center">
+                  <ion-button fill="clear" expand="full" [ngStyle]="{'background': COLOR_MENU_BACKEND}"
+                    class="btnComprar" (click)="modalFromPago(precio)">
+                    <ion-icon class="iconComprar" name="cash"></ion-icon>
+                    &nbsp; {{ 'GET-PLANS.comprar' | translate }}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+          </ion-col>
+
+          <ion-col size="2" class="colToggleBenef">
+            <ion-toggle class="botonToggle" formControlName="planSel"
+              value="{{ formPrecios['controls'][i].value.idPlan }}" (ngModelChange)="funSelPrecio()">
+            </ion-toggle>
+            <div class="divBenefit"><br><br>
+              <ion-button fill="clear" [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="btnBeneficios"
+                (click)="verDetallePrecio(precio.idp, precio.name_plan)">&nbsp;
+                <ion-icon class="iconVerBenef" [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="eye"></ion-icon>&nbsp;
+              </ion-button>
+            </div>
+          </ion-col>
+
+        </ion-item>
+      </ion-grid>
+    </form>
+
+  </ion-list>
+</ion-content>

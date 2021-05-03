@@ -1,0 +1,208 @@
+<ion-header>
+
+  <ion-toolbar *ngIf="COLOR_MENU_BACKEND" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="toolbarTitle">
+    <ion-title class="navbarTitle">{{ navbarTitle | uppercase }}</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="!COLOR_MENU_BACKEND" color="primary" class="toolbarTitle">
+    <ion-title class="navbarTitle">{{ navbarTitle | uppercase }}</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="contentPopover">
+
+  <div *ngIf="parametros.type == 'plan'"><br>
+    <p>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.plan' | translate }}
+      </b>
+      {{ parametros[0].name }}
+    </p>
+    <p>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.descripcion' | translate }}
+      </b>
+      {{ parametros[0].description }}
+    </p>
+    <p *ngIf="COLOR_MENU_BACKEND" class="PBeneficios">
+      <ion-button class="btnBeneficios" size="small" fill="clear" [ngStyle]="{'background': COLOR_MENU_BACKEND}"
+        (click)="verDetallePrecio(parametros[0].id, parametros[0].name)">
+        {{ 'POPOVER-DESCRIPCION.beneficios' | translate }}
+      </ion-button>
+    </p>
+    <p *ngIf="!COLOR_MENU_BACKEND" class="PBeneficios">
+      <ion-button size="small" color="primary" (click)="verDetallePrecio(parametros[0].id, parametros[0].name)">
+        {{ 'POPOVER-DESCRIPCION.beneficios_plan' | translate }}
+      </ion-button>
+    </p>
+  </div>
+
+  <div *ngIf="parametros.type == 'vendedor'"><br>
+    <p>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.id' | translate }}
+      </b>
+      {{ parametros[0].id }}
+    </p>
+    <p>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.nombre' | translate }}
+      </b>
+      {{ parametros[0].firstname }} {{ parametros[0].lastname }}
+    </p>
+    <p>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.correo' | translate }}
+      </b>
+      {{ parametros[0].email }}
+    </p>
+    <p>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.telefono' | translate }}
+      </b>
+      {{ parametros[0].phone }}
+    </p><br>
+  </div>
+
+  <div
+    *ngIf="(parametros.type == 'detalleEdades') && (parametros[0].dataEdades[0] && parametros[0].dataEdades[0].ageMax)">
+    <br>
+    <div *ngFor="let rangoEd of parametros[0].dataEdades">
+      <ion-text class="nPasaj">
+        <b [ngStyle]="{'color': COLOR_MENU_BACKEND}"> ({{ rangoEd.ageMin + ' - '+ rangoEd.ageMax }})
+          {{ 'POPOVER-DESCRIPCION.years' | translate }}:</b>
+        {{ rangoEd.numPas }}
+        {{ 'GET-PLANS.pasajeross' | translate }} <br>
+        <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'POPOVER-DESCRIPCION.monto' | translate }} </b>
+        {{ rangoEd.pvpSubTotal | TasaCambioPipe }} <b>{{ parametros[0].moneda }}</b>
+        <br><br>
+      </ion-text>
+    </div>
+  </div>
+
+  <div
+    *ngIf="(parametros.type == 'detalleEdades') && (parametros[0].dataEdades.numero_menores || parametros[0].dataEdades.numero_mayores)">
+    <br>
+    <ion-text class="nPasaj"
+      *ngIf="parametros[0].dataEdades.numero_menores > 0 && parametros[0].dataEdades.subTotalMenores > 0">
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        ({{ parametros[0].dataEdades.min_age + ' - '+ parametros[0].dataEdades.normal_age }})
+        {{ 'POPOVER-DESCRIPCION.years' | translate }}:</b>
+      {{ parametros[0].dataEdades.numero_menores }}
+      {{ 'GET-PLANS.pasajeross' | translate }} <br>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'POPOVER-DESCRIPCION.monto' | translate }} </b>
+      {{ parametros[0].dataEdades.subTotalMenores | TasaCambioPipe }} <b>{{ parametros[0].moneda }}</b>
+      <br><br>
+    </ion-text>
+
+    <ion-text class="nPasaj"
+      *ngIf="parametros[0].dataEdades.numero_mayores > 0 && parametros[0].dataEdades.subTotalMayor > 0">
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        ({{ (parametros[0].dataEdades.normal_age + 1) + ' - '+ parametros[0].dataEdades.max_age }})
+        {{ 'POPOVER-DESCRIPCION.years' | translate }}:</b>
+      {{ parametros[0].dataEdades.numero_mayores }}
+      {{ 'GET-PLANS.pasajeross' | translate }} <br>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'POPOVER-DESCRIPCION.monto' | translate }} </b>
+      {{ parametros[0].dataEdades.subTotalMayor | TasaCambioPipe }} <b>{{ parametros[0].moneda }}</b>
+      <br><br>
+    </ion-text>
+  </div>
+
+  <div *ngIf="parametros.type == 'descripUpgrade'"><br>
+    <ion-text>
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.descripcion' | translate }}
+      </b>
+      {{ parametros[0].descripcionUpgrade }}<br><br>
+    </ion-text>
+    <ion-text *ngIf="parametros[0].rango_edades_activo == 'Y'">
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.aplica_para' | translate }}
+      </b>
+      ({{ parametros[0].edad_min_upgr + ' - ' + parametros[0].edad_max_upgr }}
+      {{ 'POPOVER-DESCRIPCION.years' | translate }})<br><br>
+    </ion-text>
+    <ion-text *ngIf="parametros[0].rango_edades_activo != 'Y'">
+      <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'POPOVER-DESCRIPCION.aplica_para_todos' | translate }}
+      </b><br><br>
+    </ion-text>
+  </div>
+
+  <div *ngIf="parametros.type == 'upgradesAplicados'" scrollX="true">
+    <ion-text *ngFor="let upgrade of parametros[0]">
+      <div class="divUpgrades">
+        <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+          {{ 'POPOVER-DESCRIPCION.upgrade' | translate }}
+        </b>
+        {{ upgrade.name_raider }}<br>
+        <div *ngIf="upgrade.type_raider == 1">
+          <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+            {{ 'POPOVER-DESCRIPCION.valor_upgrade' | translate }}
+          </b>{{ upgrade.monto_upgrade | TasaCambioPipe:upgrade.tasa_cambio | number : '1.2-2' }}
+          <b>
+            {{ upgrade.moneda }}
+          </b>
+        </div>
+        <div *ngIf="upgrade.type_raider == 2">
+          <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+            {{ 'POPOVER-DESCRIPCION.valor_upgrade' | translate }}
+          </b>{{ upgrade.monto_upgrade | TasaCambioPipe | number : '1.2-2' }}
+          <b>
+            %
+          </b>
+        </div>
+        <br>
+
+        <div *ngIf="upgrade.tipo_calculo == 2 || upgrade.tipo_calculo == 5">
+          <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+            {{ 'POPOVER-DESCRIPCION.aplica_a' | translate }}
+          </b>
+          {{ upgrade.pasajero.length }} {{ 'POPOVER-DESCRIPCION.pasajeros' | translate }}
+        </div>
+
+        <div *ngIf="upgrade.tipo_calculo != 2 && upgrade.tipo_calculo != 5">
+          <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+            {{ 'POPOVER-DESCRIPCION.aplica_para_todos' | translate }}
+          </b>
+        </div>
+
+        <div>
+          <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+            {{ 'POPOVER-DESCRIPCION.valor_aplicado' | translate }}
+          </b>
+          {{ upgrade.monto_aplicado | TasaCambioPipe:upgrade.tasa_cambio | number : '1.2-2' }}
+          <b>
+            {{ upgrade.moneda }}
+          </b>
+        </div>
+        <br>
+      </div>
+    </ion-text>
+
+  </div>
+
+  <div *ngIf="parametros.type == 'infoTdc'"><br>
+    <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+      {{ 'POPOVER-DESCRIPCION.nombre_targ' | translate }}
+    </b>
+    {{ parametros.dataOrden.credito_nombre }} <br><br>
+
+    <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+      {{ 'POPOVER-DESCRIPCION.n_targ' | translate }}
+    </b>
+    **** {{ parametros.dataOrden.credito_numero }} <br><br>
+
+    <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+      {{ 'POPOVER-DESCRIPCION.expiracion' | translate }}
+    </b>
+    {{ parametros.dataOrden.credito_expira }} <br><br>
+
+    <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+      {{ 'POPOVER-DESCRIPCION.tipo_tarjeta' | translate }}
+    </b>
+    {{ parametros.dataOrden.credito_tipo | translate }}<br><br>
+  </div>
+
+</ion-content>

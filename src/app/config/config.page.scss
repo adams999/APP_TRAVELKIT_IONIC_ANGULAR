@@ -1,0 +1,32 @@
+.menuConfig {
+  color: white;
+
+  .btnMenu {
+    color: white;
+  }
+
+  .tituloMenu {
+    text-align: center;
+    font-weight: bold;
+  }
+}
+
+.refresher {
+  background: var(--fondo-bug);
+}
+
+.classFooter {
+  background: var(--fondo-bug);
+  margin: 0%;
+  padding: 0%;
+  .footerToolbar {
+    margin: 0%;
+    padding: 0%;
+    .footerTitle {
+      margin: 0%;
+      padding: 0%;
+      text-align: center;
+      font-size: 14px;
+    }
+  }
+}

@@ -1,0 +1,485 @@
+<ion-header>
+  <ion-toolbar class="tituloMenu" [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+    <ion-title class="tituloMenu">{{ 'INFO-EMISION.titulo' | translate | uppercase }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="infoEmision" *ngIf="dataOrden">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="3">
+
+        </ion-col>
+        <ion-col size="6">
+          <img [src]="logo" *ngIf="logo != false">
+        </ion-col>
+        <ion-col size="3">
+
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="dataOrden && dataOrden.status != '1' && dataOrden.forma_pago != 4 " class="divAvisoStatusOrden"
+        color="dark">
+        <ion-row class="colInfo">
+          <ion-col size="4">
+          </ion-col>
+          <ion-col size="4">
+            <ion-icon name="close" color="danger" class="iconEmision"></ion-icon>
+          </ion-col>
+          <ion-col size="4">
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="colInfo">
+          <ion-col size="12">
+            {{ 'INFO-EMISION.error_procesar' | translate }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="colInfo"
+          *ngIf="dataOrden.response && dataOrden.response.transactionResponse && dataOrden.response.transactionResponse.errors && dataOrden.response.transactionResponse.errors.errorText && dataOrden.status != '1'">
+          <ion-col size="12">
+            {{ 'INFO-EMISION.trans_rechazada' | translate }}
+            {{ dataOrden.response.transactionResponse.errors.errorText }}
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="dataOrden && dataOrden.status != '1' && dataOrden.forma_pago == 4" class="divAvisoStatusOrden"
+        color="dark">
+        <ion-row class="colInfo">
+          <ion-col size="12">
+            <h3 [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+              {{ 'INFO-EMISION.asistencia_por_aprobar' | translate }}
+            </h3>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="colInfo">
+          <ion-col size="12">
+            <p>
+              {{ 'INFO-EMISION.emision_enviada_correo' | translate }}
+            </p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="dataOrden && dataOrden.status == '1'" class="divAvisoStatusOrden" color="dark">
+        <ion-row class="colInfo">
+          <ion-col size="12">
+            {{ 'INFO-EMISION.gracias_compra' | translate }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="colInfo">
+          <ion-col size="4">
+          </ion-col>
+          <ion-col size="4">
+            <ion-icon name="checkmark" color="success" class="iconEmision"></ion-icon>
+          </ion-col>
+          <ion-col size="4">
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="colInfo">
+          <ion-col size="12">
+            {{ 'INFO-EMISION.procesada_correctamente' | translate }}
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="dataOrden.status == 1" class="textoEmisionOk"><br><br>
+        {{ 'INFO-EMISION.gracias_por' | translate }} <br><br>
+        {{ 'INFO-EMISION.leer_term_text' | translate }} <br>
+        <ion-button fill="clear" size="small" (click)="navegadorApp()">
+          <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+            {{ urlPlatform }}
+          </b>
+        </ion-button><br><br>
+        {{ 'INFO-EMISION.rc_asist' | translate }} <br><br>
+        {{ 'INFO-EMISION.ponerse_contacto' | translate }} <br>
+      </div>
+
+      <div *ngIf="dataSocial">
+        <br>
+        <ion-row class="colInfo">
+          <ion-col size="6" *ngIf="dataSocial.SKYPE">
+            <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="logo-skype"></ion-icon> &nbsp;
+            <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'INFO-EMISION.skype' | translate }}</b><br>
+            {{ dataSocial.SKYPE }}
+          </ion-col>
+
+          <ion-col size="6" *ngIf="dataSocial.EMAIL_FROM">
+            <ion-button fill="clear" size="small" (click)="enviarEmailNativ(dataSocial.EMAIL_FROM)" class="btnWs">
+              <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="mail"></ion-icon>
+            </ion-button>
+            <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'INFO-EMISION.correo' | translate }}</b><br>
+            {{ dataSocial.EMAIL_FROM }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="colInfo">
+          <ion-col size="12" *ngIf="dataSocial.ID_WHATSAPP">
+            <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="logo-whatsapp"></ion-icon>&nbsp;
+            <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'INFO-EMISION.whatsapp' | translate }}</b><br>
+            {{ dataSocial.ID_WHATSAPP }}
+            <ion-button fill="clear" size="small" *ngIf="whatsapp == true" class="btnWs"
+              href="https://wa.me/{{ dataSocial.ID_WHATSAPP | slice}}">
+              <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="logo-whatsapp"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="dataTextTelef">
+        <br><br>
+        <ion-row class="colInfoTextTelf">
+          <ion-col size="12">
+            {{ dataTextTelef.text_inf_carntet2 }}
+          </ion-col>
+        </ion-row>
+        <br>
+      </div>
+    </ion-grid>
+
+    <ion-row>
+      <ion-col size="12" class="tituloSegmento" [ngStyle]="{'border-color': 'dark'}">
+        <h3 [ngStyle]="{'color': COLOR_MENU_BACKEND}"> <b>{{ 'INFO-EMISION.datos_viaje' | translate }}</b> </h3>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="colInfo">
+      <ion-col size="4">
+        <b>
+          <ion-icon name="grid" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.categoria' | translate }}
+        </b><br> {{ dataOrden.categoria }}
+      </ion-col>
+      <ion-col size="4">
+        <b>
+          <ion-icon name="airplane" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.plan' | translate }}
+        </b><br>
+        {{ dataInfoEmision.dataQuote.dataPreOrden.array_prices_app.name_plan }}
+      </ion-col>
+      <ion-col size="4">
+        <b>
+          <ion-icon name="radio-button-off" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.estatus' | translate }}
+        </b><br>
+        <ion-text class="estatusLetra" *ngIf="dataOrden.status == 1" [ngStyle]="{'color': activo}">
+          {{ 'DETALLEORDEN.activo' | translate }}</ion-text>
+        <ion-text class="estatusLetra" *ngIf="dataOrden.status == 2" [ngStyle]="{'color': pagoPendCDA}">
+          {{ 'DETALLEORDEN.pagoPendCDA' | translate }}</ion-text>
+        <ion-text class="estatusLetra" *ngIf="dataOrden.status == 3" [ngStyle]="{'color': activoEspirado}">
+          {{ 'DETALLEORDEN.act_expirado' | translate }}</ion-text>
+        <ion-text class="estatusLetra" *ngIf="dataOrden.status == 4" [ngStyle]="{'color': invalido}">
+          {{ 'DETALLEORDEN.invalido' | translate }}</ion-text>
+        <ion-text class="estatusLetra" *ngIf="dataOrden.status == 5" [ngStyle]="{'color': anulado}">
+          {{ 'DETALLEORDEN.anulado' | translate }}</ion-text>
+        <ion-text class="estatusLetra" *ngIf="dataOrden.status == 6" [ngStyle]="{'color': pagoPendTDC}">
+          {{ 'DETALLEORDEN.pagoPendTDC' | translate }}</ion-text>
+        <ion-text class="estatusLetra" *ngIf="dataOrden.status == 9" [ngStyle]="{'color': prueba}">
+          {{ 'DETALLEORDEN.prueba' | translate }}</ion-text>&nbsp;
+        <ion-icon class="iconStat" name="airplane" *ngIf="dataOrden.status == '1'" [ngStyle]="{'color': activo}">
+        </ion-icon>
+        <ion-icon class="iconStat" name="airplane" *ngIf="dataOrden.status == '2'" [ngStyle]="{'color': pagoPendCDA}">
+        </ion-icon>
+        <ion-icon class="iconStat" name="airplane" *ngIf="dataOrden.status == '3'"
+          [ngStyle]="{'color': activoEspirado}">
+        </ion-icon>
+        <ion-icon class="iconStat" name="airplane" *ngIf="dataOrden.status == '4'" [ngStyle]="{'color': invalido}">
+        </ion-icon>
+        <ion-icon class="iconStat" name="airplane" *ngIf="dataOrden.status == '5'" [ngStyle]="{'color': anulado}">
+        </ion-icon>
+        <ion-icon class="iconStat" name="airplane" *ngIf="dataOrden.status == '6'" [ngStyle]="{'color': pagoPendTDC}">
+        </ion-icon>
+        <ion-icon class="iconStat" name="airplane" *ngIf="dataOrden.status == '7'" [ngStyle]="{'color': prueba}">
+        </ion-icon>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="colInfo">
+      <ion-col size="4">
+        <b>
+          <ion-icon name="code" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.voucher' | translate }}
+        </b><br> {{ dataOrden.codigo }}
+      </ion-col>
+      <ion-col size="4">
+        <b>
+          <ion-icon name="globe" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.origen' | translate }}
+        </b><br> {{ dataOrden.origen }}
+      </ion-col>
+      <ion-col size="4">
+        <b>
+          <ion-icon name="globe" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.destino' | translate }}
+        </b><br> {{ dataOrden.destino }}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="colInfo">
+      <ion-col size="4">
+        <b>
+          <ion-icon name="calendar" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.emitido' | translate }}
+        </b><br> {{ dataOrden.ffecha }}
+      </ion-col>
+      <ion-col size="4">
+        <b>
+          <ion-icon name="calendar" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.salida' | translate }}
+        </b><br> {{ dataOrden.fsalida }}
+      </ion-col>
+      <ion-col size="4">
+        <b>
+          <ion-icon name="calendar" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.llegada' | translate }}
+        </b><br> {{ dataOrden.fretorno }}
+      </ion-col>
+    </ion-row>
+
+    <div *ngIf="dataOrden.forma_pago == 2">
+      <ion-row class="colInfo">
+        <ion-col size="4" *ngIf="dataOrden.credito_numero.length > 2">
+          <b>
+            <ion-icon name="card" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+            {{ 'INFO-EMISION.tdc' | translate }}
+          </b><br> * {{ dataOrden.credito_numero }}
+        </ion-col>
+        <ion-col size="4" *ngIf="dataOrden.credito_nombre.length > 5">
+          <b>
+            <ion-icon name="card" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+            {{ 'INFO-EMISION.titular' | translate }}
+          </b><br> {{ dataOrden.credito_nombre }}
+        </ion-col>
+        <ion-col size="4" *ngIf="dataOrden.credito_tipo.length > 2">
+          <b>
+            <ion-icon name="card" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+            {{ 'INFO-EMISION.tipo_tdc' | translate }}
+          </b><br> {{ dataOrden.credito_tipo }}
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngIf="dataOrden.forma_pago == 1">
+      <ion-row class="colInfo">
+        <ion-col size="12">
+          <b>
+            <ion-icon name="pricetag" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+            {{ 'INFO-EMISION.pagado_con' | translate }}
+          </b><br>
+          {{ 'INFO-EMISION.credito_de_agencia' | translate }}
+          <br>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ion-row class="colInfo">
+      <ion-col size="6">
+        <b>
+          <ion-icon name="calendar" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.n_dias' | translate }}
+        </b><br> {{ dataInfoEmision.dataQuote.dataPreOrden.dias }}
+      </ion-col>
+      <ion-col size="6">
+        <b>
+          <ion-icon name="person" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.n_pasajeros' | translate }}
+        </b><br>
+        {{ dataInfoEmision.dataQuote.dataPreOrden.pasajeros.length }}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="colInfo" *ngIf="dataOrden.cupon">
+      <ion-col size="6">
+        <b>
+          <ion-icon name="happy" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.cupon' | translate }}
+        </b><br> {{ dataOrden.cupon }}
+      </ion-col>
+      <ion-col size="6">
+        <b>
+          <ion-icon name="logo-usd" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ 'INFO-EMISION.descuento' | translate }}
+        </b><br> {{ dataOrden.moneda }}
+        {{ dataOrden.cupon_descto | number : '1.2-2' }}
+      </ion-col>
+    </ion-row>
+
+    <div *ngIf="dataOrden.raiders.length > 0">
+      <h4 class="colInfo"><b>
+          <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="people"></ion-icon>
+          {{ 'DETALLEORDEN.benef_adicionales' | translate }}
+        </b> <a [ngStyle]="{'color': COLOR_MENU_BACKEND}"> </a> </h4>
+
+      <ion-item>
+        <div color="dark" class="divRaiders">
+          <ion-text *ngFor="let raider of dataOrden.raiders, let r = index">
+            <p *ngIf="raider.name_raider"><b>{{ 'DETALLEORDEN.nombre' | translate }}</b> {{raider.name_raider}}
+            </p>
+            <p *ngIf="raider.rd_calc_type == '1'"><b>{{ 'DETALLEORDEN.tipo_calculo' | translate }}</b>
+              {{ 'DETALLEORDEN.comprobante' | translate }}</p>
+            <p *ngIf="raider.rd_calc_type == '2'"><b>{{ 'DETALLEORDEN.tipo_calculo' | translate }}</b>
+              {{ 'DETALLEORDEN.pasajero_especifico' | translate }}</p>
+            <p *ngIf="raider.rd_calc_type == '3'"><b>{{ 'DETALLEORDEN.tipo_calculo' | translate }}</b>
+              {{ 'DETALLEORDEN.pasajero_general' | translate }}</p>
+            <p *ngIf="raider.rd_calc_type == '4'"><b>{{ 'DETALLEORDEN.tipo_calculo' | translate }}</b>
+              {{ 'DETALLEORDEN.por_dia_por_voucher' | translate }}</p>
+            <p *ngIf="raider.rd_calc_type == '5'"><b>{{ 'DETALLEORDEN.tipo_calculo' | translate }}</b>
+              {{ 'DETALLEORDEN.por_dia_por_pasajero' | translate }}</p>
+
+            <p *ngIf="raider.rd_calc_type == '1'">
+              <b>{{ 'DETALLEORDEN.pasajeros' | translate }}</b>
+              <ion-text>
+                {{ 'DETALLEORDEN.todos_voucher' | translate }}
+              </ion-text>
+            </p>
+
+            <p *ngIf="raider.nombre && (raider.rd_calc_type == '2' || raider.rd_calc_type == '5')">
+              <b>{{ 'DETALLEORDEN.pasajero' | translate }}</b>
+              <ion-text>
+                {{ raider.nombre }} {{ raider.apellido }}
+              </ion-text>
+            </p>
+
+            <p *ngIf="raider.rd_calc_type == '3'">
+              <b>{{ 'DETALLEORDEN.pasajeros' | translate }}</b>
+              <ion-text>
+                {{ 'DETALLEORDEN.todos_voucher' | translate }}
+              </ion-text>
+            </p>
+            <p *ngIf="raider.rd_calc_type == '4'">
+              <b>{{ 'DETALLEORDEN.pasajeros' | translate }}</b>
+              <ion-text>
+                {{ 'DETALLEORDEN.todos_voucher' | translate }}
+              </ion-text>
+            </p>
+
+            <p *ngIf="raider.edad "><b>{{ 'DETALLEORDEN.edad' | translate }}</b>
+              {{ raider.edad }}</p>
+
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6" *ngIf="raider.cost_raider">
+                  <b>{{ 'DETALLEORDEN.costo' | translate }}</b> {{ raider.cost_raider | number : '1.2-2' }}
+                </ion-col>
+                <ion-col size="6" *ngIf="raider.value_raider">
+                  <b>{{ 'DETALLEORDEN.precio' | translate }}</b> {{ raider.value_raider | number : '1.2-2' }}
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <br>
+          </ion-text>
+        </div><br>
+      </ion-item>
+    </div>
+
+    <div *ngIf="dataOrden.status == 1">
+      <br><br>
+
+      <ion-button class="seccion" [ngStyle]="{'background':COLOR_MENU_BACKEND}" (click)="funHiddenDiv('opciones')"
+        expand="block" fill="clear">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="11">
+              {{ 'INFO-EMISION.opciones' | translate | uppercase }}
+            </ion-col>
+
+            <ion-col size="1">
+              <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="!opciones">
+              </ion-icon>
+              <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="opciones">
+              </ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-button>
+
+      <div *ngIf="opciones == 'opciones'" id="opciones">
+        <ion-row class="colInfo">
+          <ion-col size="6" class="divBtn">
+            <ion-button (click)="enviarEmail(dataOrden.id, dataOrden.codigo)" class="btnFondo" size="small"
+              [ngStyle]="{'background': color_menu_barra_hover}">
+              {{ 'INFO-EMISION.enviar' | translate }} &nbsp; <ion-icon name="mail"></ion-icon>
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="6" class="divBtn">
+            <ion-button (click)="descargaVerPDF(dataOrden.codigo, $event)" class="btnFondo" size="small"
+              [ngStyle]="{'background': color_menu_barra_hover}">
+              {{ 'INFO-EMISION.ver_pdf' | translate }} &nbsp; <ion-icon name="document"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="colInfo" *ngIf="urlCondicionado">
+          <ion-col size="12">
+            <ion-button class="btnFondo" size="small" [ngStyle]="{'background': COLOR_MENU_BACKEND}"
+              (click)="verCondicionesPDF()">
+              {{ 'INFO-EMISION.condiciones' | translate }}&nbsp;
+              <ion-icon name="archive"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row><br>
+
+        <ion-button class="seccion" [ngStyle]="{'background':COLOR_MENU_BACKEND}"
+          (click)="funHiddenDivMasOpc('masOpciones')" expand="block" fill="clear">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="11">
+                {{ 'INFO-EMISION.mas_opciones' | translate | uppercase }}
+              </ion-col>
+
+              <ion-col size="1">
+                <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="!masOpciones">
+                </ion-icon>
+                <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="masOpciones">
+                </ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-button>
+
+        <div *ngIf="masOpciones=='masOpciones'" id="masOpciones">
+          <ion-grid>
+            <ion-row class="colInfo">
+              <ion-col size="8">
+                {{ 'INFO-EMISION.enviar_sms_tel' | translate }}
+              </ion-col>
+
+              <ion-col size="4" class="divBtn">
+                <ion-button (click)="enviarSms(dataOrden.codigo, $event, dataOrden.fsalida)" class="btnFondo"
+                  size="small" [ngStyle]="{'background': color_menu_barra_hover}">
+                  {{ 'INFO-EMISION.sms' | translate }}&nbsp; <ion-icon name="send"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+
+            <div><br>
+              <ion-row class="colInfo">
+                <ion-col size="1">
+                  <ion-checkbox [(ngModel)]="agregarEvento" checked="false"></ion-checkbox>
+                </ion-col>
+
+                <ion-col size="11" class="divBtn">
+                  {{ 'INFO-EMISION.recibir_copia' | translate }} {{ dataOrden.fsalida }}
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divBtn"><br><br>
+    <ion-button (click)="irAtras()" color="dark" size="small">
+      {{ 'INFO-EMISION.finalizar' | translate }}
+    </ion-button><br><br>
+  </div>
+
+</ion-content>

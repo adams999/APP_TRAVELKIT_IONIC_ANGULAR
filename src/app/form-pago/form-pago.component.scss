@@ -1,0 +1,227 @@
+.menu {
+  color: white;
+}
+
+.tituloMenu {
+  color: white;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+}
+
+ion-card {
+  position: relative;
+  text-align: center;
+}
+
+.itemPasajero {
+  background: var(--transparente) !important;
+}
+
+.tituloPlans {
+  color: white;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+}
+
+.card-title {
+  position: absolute;
+  top: 0%;
+  font-size: 160%;
+  width: 100%;
+  font-weight: bold;
+  color: #fff;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.colImg {
+  margin: 0%;
+  padding: 0%;
+}
+
+.imgLogo {
+  margin: 0%;
+  padding: 0%;
+}
+
+.tituloImgAgencia {
+  font-size: 70%;
+}
+
+.pDiasViaje {
+  font-size: 12pt;
+  margin-top: 0%;
+  padding-top: 0%;
+}
+
+.card-subtitle {
+  font-size: 100%;
+  position: absolute;
+  top: 60%;
+  width: 100%;
+  color: #fff;
+}
+
+.iconCerrarModal {
+  font-size: 150%;
+  color: white;
+}
+
+.pasTitulo {
+  font-weight: bold;
+  margin: -3% 0% -3% 0%;
+}
+
+.btnSiguiente {
+  color: white;
+}
+
+.alignMontoCreditAgency {
+  align-items: center;
+  text-align: center;
+}
+
+.seccion {
+  color: white;
+}
+
+.tituloPlan {
+  align-items: center;
+  text-align: center;
+  align-content: center;
+  font-size: 125%;
+}
+
+.colBeneficios {
+  align-items: center;
+  align-self: center;
+  text-align: center;
+}
+
+.btnBeneficios {
+  --background: var(--transparente);
+  color: white;
+  margin-top: -6%;
+  margin-bottom: -6%;
+}
+
+.btnInfo {
+  --background: var(--transparente);
+  color: white;
+  margin-top: -3%;
+}
+
+.iconUpgrade {
+  color: #008f39;
+  font-weight: bold;
+  font-size: 150%;
+  margin-bottom: -10px;
+}
+
+.btnAgregarUpgrade {
+  --border-color: var(--btnAgregarUpgrade);
+}
+
+.iconSiguiente {
+  color: white;
+}
+
+.textRaider {
+  padding-top: 5%;
+}
+
+.bRaider {
+  margin-top: 5%;
+}
+
+.itemUpgrade {
+  border-bottom: 1px solid;
+}
+
+.divUpgrades {
+  border-bottom: 1px solid;
+  border-top: 1px solid;
+}
+
+.divPrecios {
+  border-bottom: 1px solid;
+  border-top: 1px solid;
+}
+
+.divUpgradesText {
+  text-align: center;
+  align-items: center;
+  align-content: center;
+}
+
+.iconVerBenef {
+  font-size: 150%;
+}
+
+.iconoFactor.ios {
+  font-size: 140%;
+  margin-bottom: -6%;
+}
+
+.iconValidForm.ios {
+  font-size: 150%;
+  margin-bottom: -2%;
+}
+
+.colVerInfoBenef {
+  margin-bottom: -5%;
+}
+
+.textElimTodosUpgr {
+  margin-top: 7px;
+}
+
+.iconFalseInput {
+  font-size: 70%;
+}
+
+.iconCardTDC {
+  font-size: 150%;
+  margin-right: 5%;
+}
+
+.colPrecioTotal {
+  border-top: 1px solid;
+}
+
+.colImgTDC {
+  text-align: center;
+}
+
+.divTermCon {
+  text-align: justify;
+}
+
+.aTermCond {
+  font-weight: bold;
+}
+
+.iconTDCPago {
+  color: white;
+}
+
+.iconTDCPago.ios {
+  margin-top: -6%;
+}
+
+.iconPaypal {
+  position: absolute;
+  margin-top: -7%;
+}
+
+.btnTipoPago {
+  color: white;
+  --background: var(--transparente);
+}
+
+.classPaymentIlsols {
+  text-align: center;
+}

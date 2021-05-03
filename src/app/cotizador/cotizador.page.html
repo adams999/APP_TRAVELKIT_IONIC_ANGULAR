@@ -1,0 +1,271 @@
+<ion-header>
+  <ion-toolbar *ngIf="userType && pref" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="menu">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" class="btnMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="tituloMenu">
+      {{ 'COTIZADOR.cotizador' | translate | uppercase }} <ion-icon name="airplane"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="!userType || !pref" color="primary" class="menu">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title class="tituloMenu">
+      {{ 'COTIZADOR.cotizador' | translate | uppercase }} <ion-icon name="airplane"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!userType">
+  <ion-refresher slot="fixed" (ionRefresh)="arribaRefresh($event)" class="refresher">
+    <ion-refresher-content pullingIcon="arrow-down" refreshingSpinner="dots"></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <img src="../../assets/imgs/cotizar.jpg" />
+    <div class="card-titles">
+    </div>
+  </ion-card>
+
+  <h5 class="titAvisoLogeo">
+    <ion-icon name="alert"></ion-icon><br>
+    {{ 'COTIZADOR.inicia_ses_acc_cot' | translate }}
+  </h5>
+</ion-content>
+
+<ion-content *ngIf="userType">
+  <ion-refresher slot="fixed" (ionRefresh)="arribaRefresh($event)" class="refresher">
+    <ion-refresher-content pullingIcon="arrow-down" refreshingSpinner="dots"></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-spinner *ngIf="spinnerImg == false" name="dots" class="spinnerImg"></ion-spinner>
+    <div class="logoCotiza">
+      <img [src]="logo" (load)="cargaDeImg($event)" *ngIf="logo!=false" />
+    </div>
+  </ion-card>
+
+  <ion-item *ngIf="paises">
+    <ion-label fill="floating">{{ 'COTIZADOR.pais_origen' | translate }}</ion-label>
+    <ion-select [(ngModel)]="origen" placeholder="{{ 'COTIZADOR.sel_pais_origen' | translate }}"
+      (ionChange)="[scrollAbajo(), rangoEdadesYFechas(), nombreOrigen(origen)]" class="select"
+      okText="{{ 'COTIZADOR.aceptar' | translate }}" cancelText="{{ 'COTIZADOR.cancelar' | translate }}">
+      <ion-select-option *ngFor="let pais of paises" value="{{pais.iso_country}}">{{ pais.description }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item *ngIf="!origen">
+    <p class="pAviso">
+      <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        {{ 'COTIZADOR.sel_pais_origen' | translate }}!
+      </a>
+    </p>
+  </ion-item>
+
+  <ion-item *ngIf="origen">
+    <ion-label fill="floating">{{ 'COTIZADOR.region_destino' | translate }}</ion-label>
+    <ion-select *ngIf="territorios.length <= 10" name="destino" [(ngModel)]="destino" id="destino"
+      (ionChange)="[scrollAbajo(700),nombredestino(destino)]" interface="popover"
+      placeholder="{{ 'COTIZADOR.sel_region_destino' | translate }}" class="select"
+      okText="{{ 'COTIZADOR.aceptar' | translate }}" cancelText="{{ 'COTIZADOR.cancelar' | translate }}">
+      <ion-select-option *ngFor="let territorio of territorios" value="{{territorio.id_territory}}">
+        {{ territorio.desc_small }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select *ngIf="territorios.length > 10" name="destino" [(ngModel)]="destino" id="destino"
+      (ionChange)="[scrollAbajo(700),nombredestino(destino)]"
+      placeholder="{{ 'COTIZADOR.sel_region_destino' | translate }}" class="select"
+      okText="{{ 'COTIZADOR.aceptar' | translate }}" cancelText="{{ 'COTIZADOR.cancelar' | translate }}">
+      <ion-select-option *ngFor="let territorio of territorios" value="{{territorio.id_territory}}">
+        {{ territorio.desc_small }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <h3 *ngIf="destino" class="tituloCat" [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+    {{ 'COTIZADOR.categorias' | translate }}
+  </h3>
+  <ion-content class="scrollCategorias ion-items-align-center" *ngIf="destino" scrollX="true" scrollY="true"
+    [ngStyle]="{'border-color': COLOR_MENU_BACKEND}">
+    <div *ngFor="let categoria of categorias; let a = index">
+      <ion-card (click)="selCategoria(categoria.id_plan_categoria, categoria.name_plan)"
+        class="ion-items-align-center ion-activatable ionCard">
+        <ion-card-header class="ion-items-align-center">
+
+          <ion-grid *ngIf="categoria.img.length > 1">
+            <ion-row>
+              <ion-col size="2">
+              </ion-col>
+              <ion-col size="8">
+                <div *ngIf="spinnerLoader[a] == false" class="divSpinnerImg">
+                  <ion-spinner class="spinnerImg"></ion-spinner>
+                </div>
+                <img class="imgCategory" [src]="categoria.img" (load)="cargaImgCategorias($event,a)" />
+              </ion-col>
+              <ion-col size="2">
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid *ngIf="categoria.img.length == 0">
+            <ion-row>
+              <ion-col size="2">
+              </ion-col>
+              <ion-col size="8">
+                <ion-icon class="iconCategory" name="airplane"></ion-icon>
+              </ion-col>
+              <ion-col size="2">
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-card-title class="tituloNamePlan">{{categoria.name_plan}}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content class="ionTextCategory">
+          {{categoria.description_plan}}
+        </ion-card-content>
+        <ion-ripple-effect></ion-ripple-effect>
+      </ion-card>
+    </div>
+  </ion-content>
+
+  <div>
+    <ion-item *ngIf="selCateg" class="catSelec">
+      <ion-label>
+        <ion-text class="ion-text-wrap ion-items-align-center">
+          <b>{{ 'COTIZADOR.categoria_sel' | translate }}</b> <br>
+          {{selCategoriaName}}
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </div>
+
+  <div *ngIf="selCateg && intervaloFechas ">
+
+    <ion-item *ngIf="intervaloFechas[0].type_category == 'MULTI_TRIP'">
+      <ion-label fill="floating" [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'COTIZADOR.dias_max' | translate }}
+      </ion-label>
+      <ion-select interface="popover" [(ngModel)]="bloque" placeholder="{{ 'COTIZADOR.sel_dias_max' | translate }}"
+        class="select" okText="{{ 'COTIZADOR.aceptar' | translate }}"
+        cancelText="{{ 'COTIZADOR.cancelar' | translate }}">
+        <ion-select-option *ngFor="let bloques of intervaloFechas[0].bloques_multi_viajes"
+          value="{{bloques.dias_multiviajes}}">{{ 'COTIZADOR.maximo' | translate }} {{ bloques.dias_multiviajes }}
+          {{ 'COTIZADOR.dias' | translate }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="labelFechas ion-align-items-center">
+        <p class="ion-align-items-center">
+          <!-- <b [ngStyle]="{'color': 'black'}" align-items-center>{{ 'COTIZADOR.fecha_de_salida' | translate }}:</b> -->
+          <ion-button (click)="datePickerSalida()" class="btnFechas" fill="clear"
+            [ngStyle]="{'background': COLOR_MENU_BACKEND}"
+            [disabled]="!bloque && intervaloFechas[0].bloques_multi_viajes">
+            <ion-icon name="calendar"></ion-icon>&nbsp;{{ 'COTIZADOR.fecha_de_salida' | translate }}
+          </ion-button>
+          <ion-text *ngIf="salidaConv">
+            <ion-icon name="checkmark" color="success"></ion-icon> {{ salidaConv }}
+          </ion-text>
+        </p>
+
+      </ion-label>
+    </ion-item>
+
+    <!-- <ion-label>Fecha Salida</ion-label>
+        <ion-datetime (ionChange)="scrollAbajo()" cancelText="Atras" doneText="Ok" displayFormat="DD/MMMM/YYYY" pickerFormat="DD/MMMM/YYYY" [(ngModel)]="startDate" min="{{ fechaActual }}" max="{{ actualYYYY + 5 }}" (ngModelChange)="borrarFechaSalida($event,startDate)"></ion-datetime> -->
+  </div>
+
+  <ion-item *ngIf="startDate, destino">
+    <ion-label class="labelFechas ion-align-items-center">
+      <p class="ion-align-items-center">
+        <!-- <b [ngStyle]="{'color': 'black'}" align-items-center >Fecha de Regreso:</b> -->
+        <ion-button *ngIf="!bloqueSel" (click)="datePickerllegada()" class="btnFechas" fill="clear"
+          [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+          <ion-icon name="calendar"></ion-icon>&nbsp;{{ 'COTIZADOR.fecha_de_regreso' | translate }}
+        </ion-button>
+        <b *ngIf="bloqueSel">
+          {{ 'COTIZADOR.fecha_de_llegada' | translate }}
+        </b>
+        <ion-text *ngIf="llegadaConv">
+          <ion-icon name="checkmark" color="success"></ion-icon> {{ llegadaConv }}
+        </ion-text>
+      </p>
+
+    </ion-label>
+
+    <!-- <ion-label>Fecha Regreso</ion-label>
+        <ion-datetime (ionChange)="scrollAbajo(600)" cancelText="Atras" doneText="Ok" displayFormat="DD/MMMM/YYYY" pickerFormat="DD/MMMM/YYYY" [(ngModel)]="endDate" min="{{ llegadaMin }}" max="{{ llegadaMax }}" ></ion-datetime> -->
+  </ion-item>
+
+  <p *ngIf="!startDate && selCateg && intervaloFechas" class="pAviso">
+    <a [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+      {{ 'COTIZADOR.sel_fecha_salida' | translate }}!
+    </a>
+  </p>
+
+  <div class="ion-items-align-center" *ngIf="numPasajeros == null && endDate">
+    <p class="pPasaj">{{ 'COTIZADOR.sel_pasajeros' | translate }}</p>
+    <ion-button expand="full" (click)="nPasajeros()" value="numPasajeros" color="dark">
+      <ion-icon name="person-add"></ion-icon>
+      &nbsp;&nbsp; {{ 'COTIZADOR.cantidad' | translate }}
+    </ion-button>
+  </div>
+
+  <div class="ion-items-align-center" *ngIf="numPasajeros">
+
+    <ion-text class="ion-text-wrap ion-items-align-center">
+      <h4 class="tituloNumPasaj" [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+        <b class="bNPasajeros">{{ numPasajeros.length }}{{ 'COTIZADOR.pasajeros' | translate }}</b>
+      </h4>
+      <p class="rangoEdad">
+        <i>
+          {{ 'COTIZADOR.rang_year_valid_de' | translate }}{{this.intervaloEdades[0][0].edadMin}}
+          {{ 'COTIZADOR.hasta' | translate }}
+          {{this.intervaloEdades[0][0].edadMax}}.
+        </i>
+      </p>
+    </ion-text>
+
+    <ion-item *ngFor="let pasajero of numPasajeros, let i = index">
+      <ion-label>
+        <ion-text class="ion-text-wrap">
+          <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="iconCloseUPersona ion-align-items-end" name="close"
+            (click)="eliminarUnPasajero(pasajero,arrEdades[i])" size="small"></ion-icon>
+          <b class="textEdadPasajero"> {{ 'COTIZADOR.edad_pasajero' | translate }} {{ pasajero + 1 }}: </b>
+          <ion-button fill="clear" size="small" (click)="edadPasajero(pasajero)"
+            [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="btnInsertarEdad">
+            <ion-icon name="person"></ion-icon>
+          </ion-button>
+
+          <a class="edadPasajeroPosicion" *ngIf="arrEdades[pasajero]!'NaN'" [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+            {{ arrEdades[pasajero] }} {{ 'COTIZADOR.years' | translate }}
+          </a>
+
+        </ion-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item ngif="numPasajeros" class="textElimPasaj">
+      {{ 'COTIZADOR.elim_pasajeros' | translate }}
+      <ion-icon name="close" [ngStyle]="{'color': COLOR_MENU_BACKEND}" (click)="elimPasajeros()"></ion-icon>
+    </ion-item>
+  </div>
+
+  <div id="bottom"></div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-button [disabled]="!edades" (click)="cotizar(origen, destino, startDate, endDate, selCateg, arrEdades)"
+    expand="block" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="btnCotizar ion-items-align-center"
+    fill="clear">
+    {{ 'COTIZADOR.cotizar' | translate }}
+    <ion-icon name="cart"></ion-icon>
+  </ion-button>
+</ion-footer>

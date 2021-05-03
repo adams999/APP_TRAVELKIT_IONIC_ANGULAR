@@ -1,0 +1,95 @@
+<ion-header [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+
+  <ion-toolbar class="menu">
+    <ion-title class="tituloMenu" row>
+      <ion-icon name="paper-plane"></ion-icon>
+      {{ 'POPOVER-TEL-SMS.enviar_sms' | translate }}
+      <!-- <ion-icon (click)="close()" end class="cerrarIcon" name="close"></ion-icon> -->
+    </ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content class="contentPopover">
+
+  <p class="parrafoSmsPopover">{{ 'POPOVER-TEL-SMS.ing_n_telefono' | translate }} <ion-icon
+      [ngStyle]="{'color': color_menu_barra_hover}" name="phone-portrait"></ion-icon>
+    {{ 'POPOVER-TEL-SMS.enviar_sms_link' | translate }}<b
+      [ngStyle]="{'color': color_menu_barra_hover}">{{ codVouch }}</b> </p>
+  <ion-list>
+
+    <ion-item>
+      <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+        {{ 'POPOVER-TEL-SMS.codigo_internacional' | translate }}</ion-label>
+      <ion-select #cod (ionChange)="funCodigoSel(cod.value)" cancelText="{{ 'POPOVER-TEL-SMS.cancelar' | translate }}"
+        okText="{{ 'POPOVER-TEL-SMS.aceptar' | translate }}" [(ngModel)]="codigoTelef">
+        <ion-select-option #cod (ngModelChange)="funCodigoSel(cod.value)" *ngFor="let codigo of codigosPhon"
+          value="{{codigo.cod_phone}}">{{codigo.description}} {{codigo.cod_phone}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+        {{ 'POPOVER-TEL-SMS.telefono' | translate }}</ion-label>
+      <ion-input maxlength="20" #tel type="tel" name="tel" [(ngModel)]="dataTelef" (ionChange)="funNumTelef(tel.value)">
+      </ion-input>
+    </ion-item>
+    <br>
+    <p *ngIf="!data.codigoSel || !data.tel" class="pEjemTel" [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+      <ion-icon name="alert"></ion-icon> {{ 'POPOVER-TEL-SMS.ing_tod_datos' | translate }}
+    </p>
+    <br>
+    <div class="divButton">
+      <ion-button class="buttonEnv" size="small" [ngStyle]="{'background': COLOR_MENU_BACKEND}" fill="clear"
+        type="submit" [disabled]="!botonEnviar" (click)="enviarSms()">{{ 'POPOVER-TEL-SMS.enviar' | translate }} &nbsp;
+        <ion-icon item-left name="paper-plane"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- <ion-item>
+          <ion-label position="floating">Teléfono:</ion-label>
+          <ion-input type="tel" [(ngModel)]="data.tel" (ngModelChange)="data.tel" (ngModelChange)="ejecuta()" name="tel" formControlName="tel"></ion-input>
+        </ion-item>
+        <br>
+        <p *ngIf="!data.codigoSel || !data.tel" class="pEjemTel" [ngStyle]="{'color': COLOR_MENU_BACKEND}"><ion-icon name="alert"></ion-icon> Ingresa Todos los Datos</p>   
+        <br> 
+        <button col-12 ion-button small [ngStyle]="{'background': COLOR_MENU_BACKEND}" [disabled]="!numeroTelSms.valid" type="submit">Enviar &nbsp;<ion-icon item-left name="paper-plane"></ion-icon></button> -->
+
+
+
+
+
+
+
+
+
+    <!-- <form  [formGroup]="numeroTelSms" #formDir="ngForm" (ngSubmit)="enviarSms(codigoSel,numeroTelSms.value)">
+      
+      <ion-item>
+        <ion-label floating>Codigo Internacional:</ion-label>
+        <ion-select [(ngModel)]="codigoSel" [(ngModel)]="data.codigoSel" name="codigoSel" formControlName="codigoSel" (ngModelChange)="data.codigoSel" >
+          <ion-option *ngFor="let codigo of codigosPhon" value="{{codigo.cod_phone}}"> {{codigo.description}}  {{codigo.cod_phone}} </ion-option>
+          
+        </ion-select>
+      </ion-item>
+
+      
+        <ion-item>
+          <ion-label floating>Teléfono:</ion-label>
+          <ion-input type="tel" [(ngModel)]="data.tel" (ngModelChange)="data.tel" (ngModelChange)="ejecuta()" name="tel" formControlName="tel"></ion-input>
+        </ion-item>
+        <br>
+        <p *ngIf="!data.codigoSel || !data.tel" class="pEjemTel" [ngStyle]="{'color': COLOR_MENU_BACKEND}"><ion-icon name="alert"></ion-icon> Ingresa Todos los Datos</p>   
+        <br> 
+        <button col-12 ion-button small [ngStyle]="{'background': COLOR_MENU_BACKEND}" [disabled]="!numeroTelSms.valid" type="submit">Enviar &nbsp;<ion-icon item-left name="paper-plane"></ion-icon></button>
+      
+    </form> -->
+
+
+  </ion-list>
+
+
+
+
+</ion-content>

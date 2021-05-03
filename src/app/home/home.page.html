@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title class="tituloMenu">
+      <img item-left src="../../assets/imgs/log-ils.png" class="logoIls">
+      &nbsp; IlsAdmin
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h5 class="titulo" color="IlsAdmin"> Bienvenido</h5>
+
+  <ion-refresher slot="fixed" slot="fixed" (ionRefresh)="arribaRefresh($event)" class="refresher">
+    <ion-refresher-content pullingIcon="arrow-down" refreshingSpinner="dots">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <p *ngIf="!clientes && !Aerror" class="spinnerLoad">
+    <ion-spinner name="crescent"></ion-spinner>
+  </p>
+
+  <ion-list>
+    <ion-item ion-row *ngFor="let cliente of clientes, let i = index" (click)="listOrders(cliente, i)">
+      <ion-avatar col-2 class="avatar">
+        <ion-spinner *ngIf="spinnerImg[i] == false" name="dots" class="spinnerImg"></ion-spinner>
+        <img class="imgAvatar" [src]="cliente.logo_agencia" (load)="cargaDeImg($event, i)">
+      </ion-avatar>
+      <p class="pTituloAgente">{{ cliente.client | uppercase }}</p>
+    </ion-item>
+    <p class="pError" *ngIf="Aerror"> Error de Conexión...</p>
+  </ion-list>
+
+</ion-content>

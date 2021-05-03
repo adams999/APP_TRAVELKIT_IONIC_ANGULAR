@@ -1,0 +1,25 @@
+PASOS PARA COMPILAR EN APP DE IONIC  IOS 
+
+*sudo npm i -g @ionic/cli@latest
+
+*sudo npm i -g cordova@latest
+
+*sudo ionic cordova platform rm ios 
+
+*sudo npm i --unsafe-perm
+
+*sudo ionic cordova platform add ios@latest
+
+*Ubicar la linea
+<preference name="WKWebViewOnly" value="true" />
+en el archivo config.xml ubicado en la raiz del proyecto,
+si no existe en el config.xml anexar la linea  
+debajo de los demas preference ubicado en dicho xml.
+
+*sudo ionic cordova resources ios --force
+
+*sudo ionic cordova prepare ios 
+
+*sudo ionic cordova build ios 
+
+Dar permisologia a toda la carpeta del proyecto y luego si abrir el .workspace con scode y proceder a probar y subir a testflight

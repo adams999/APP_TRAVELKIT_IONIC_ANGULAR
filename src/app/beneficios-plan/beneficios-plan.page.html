@@ -1,0 +1,51 @@
+<ion-header>
+
+  <ion-toolbar *ngIf="COLOR_MENU_BACKEND" [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+
+    <ion-title class="tituloModal">
+      {{ 'BENEFICIOS-PLAN.beneficios' | translate | uppercase }} - {{ nombrePlan }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">
+        <ion-icon item-right class="iconCerrarModal" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="!COLOR_MENU_BACKEND" color="primary">
+
+    <ion-title class="tituloModal">
+      {{ 'BENEFICIOS-PLAN.beneficios' | translate | uppercase }} - {{ nombrePlan }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">
+        <ion-icon item-right class="iconCerrarModal" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <ion-item *ngFor="let beneficio of descBenefi" class="ion-text-wrap">
+
+      <ion-avatar>
+        <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="clipboard"></ion-icon>
+      </ion-avatar>
+
+      <ion-label class="ion-text-wrap">
+        {{ beneficio.name }}
+        <p> {{ 'BENEFICIOS-PLAN.tipo' | translate }} {{ beneficio.Type_beneficio }} </p>
+        <p *ngIf="!COLOR_MENU_BACKEND"> {{ 'BENEFICIOS-PLAN.valor' | translate }} <b color="primary">
+            {{ beneficio.valor }}</b> </p>
+        <p *ngIf="COLOR_MENU_BACKEND"> {{ 'BENEFICIOS-PLAN.valor' | translate }} <b
+            [ngStyle]="{'color': COLOR_MENU_BACKEND}"> {{ beneficio.valor }}</b>
+        </p>
+        <!-- <p *ngIf=" beneficio.valor != isInt "> {{ 'BENEFICIOS-PLAN.valor' | translate }} <b [ngStyle]="{'color': color}">  {{ beneficio.valor }}</b> </p> -->
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

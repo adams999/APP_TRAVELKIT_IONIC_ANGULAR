@@ -1,0 +1,77 @@
+<ion-app>
+  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="content1" side="start" class="menu">
+    <ion-header>
+      <ion-toolbar [ngStyle]="{'background': 'white','border-color': colorMenu}" class="toolbarMenu">
+        <ion-title class="titleMenu">
+          <ion-spinner *ngIf="loadLogo == false" name="dots" class="spinnerImgLoad"></ion-spinner>
+          <img [src]="logo" class="imgMenu" (load)="loadlogo($event)"><br>
+          <ion-icon class="iconTitleMenu" [ngStyle]="{'color': colorMenu}" name="menu">
+          </ion-icon>
+          <a class="pMenu" [ngStyle]="{'color': colorMenu}"> {{ 'COMPONENT.menu' | translate }} </a>
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="contentMenu" [ngStyle]="{'background': colorMenu}">
+
+      <ion-item *ngFor="let p of pages" (click)="openPage(p.path, p.title)" class="itemMenu">
+        <ion-label color="primary" class="labelMenu">
+          <ion-button fill="clear" size="large" expand="full" class="btnMenu" class="bTitle">
+            <b [ngStyle]="{'color': 'white'}">{{ 'ROUTING.'+p.title | translate}}</b> &nbsp;
+            <ion-icon [ngStyle]="{'color': 'white'}" class="iconMenuLog" name="{{p.icon}}"></ion-icon>
+          </ion-button>
+        </ion-label>
+      </ion-item>
+
+      <!-- <ion-list class="listMenu">
+        <ion-button [ngStyle]="{'background': color}" class="btnMenu" ion-item *ngFor="let p of pages" (click)="openPage(p.path)">
+            <ion-icon [ngStyle]="{'color': 'white'}" class="iconMenu" color="primary" name="{{p.icon}}"></ion-icon> 
+            <b [ngStyle]="{'color': 'white'}" class="bTitleMenu">&nbsp;&nbsp;{{p.title}}</b>
+        </ion-button>
+      </ion-list> -->
+      <!-- <p class="version" [ngStyle]="{'color': 'white'}">Version: {{versionAppA}} </p> -->
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="content1" main></ion-router-outlet>
+
+  <!-- cuando esta loguado -->
+  <ion-menu contentId="content1" side="start" type="push" *ngIf="userType">
+
+    <ion-toolbar [ngStyle]="{'background': 'white','border-color': colorMenu}" class="toolbarMenuLog">
+      <ion-title class="titleMenuLog">
+        <ion-spinner *ngIf="loadLogo == false" name="dots" class="spinnerImgLoad"></ion-spinner>
+        <img [src]="logo" class="imgMenu" (load)="loadlogo($event)">
+        <br>
+        <ion-icon class="iconTitleMenuLog" [ngStyle]="{'color': colorMenu}" name="menu">
+        </ion-icon>
+        <a class="pMenuLog" [ngStyle]="{'color': colorMenu}"> {{ 'COMPONENT.menu' | translate }} </a>
+      </ion-title>
+    </ion-toolbar>
+
+    <ion-content class="contentMenuLog" [ngStyle]="{'background': colorMenu}">
+
+      <ion-item *ngFor="let p of pages" (click)="openPage(p.path, p.title)" class="itemListLog">
+        <ion-label class="labelItemListLog">
+          <ion-button fill="clear" size="large" expand="full" class="bTitle">
+            <b [ngStyle]="{'color': colorText}">{{ 'ROUTING.'+p.title | translate}}</b>&nbsp;
+            <ion-icon [ngStyle]="{'color': colorText}" class="iconMenuLog" name="{{p.icon}}"></ion-icon>
+          </ion-button>
+        </ion-label>
+      </ion-item>
+
+      <ion-item (click)="borrarAlmacenamiento()" *ngIf="userType" class="itemListLog">
+        <ion-label class="labelItemListLog">
+          <ion-button fill="clear" size="large" expand="full" class="bTitle">
+            <b [ngStyle]="{'color': colorText}"> {{ 'COMPONENT.cerrar_sesion' | translate}} </b> &nbsp;
+            <ion-icon [ngStyle]="{'color': colorText}" class="iconMenuLog" name="log-out"></ion-icon>
+          </ion-button>
+        </ion-label>
+
+      </ion-item>
+
+      <!-- <p class="versionLog" [ngStyle]="{'color': 'white'}">Version: {{versionAppA}} </p> -->
+    </ion-content>
+
+  </ion-menu>
+</ion-app>
