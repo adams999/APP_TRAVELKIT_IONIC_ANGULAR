@@ -1,0 +1,374 @@
+<ion-header>
+  <ion-toolbar *ngIf="userType" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="menuContacto">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" class="btnMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="tituloMenu">
+      {{ titulo | uppercase }} <ion-icon name="finger-print"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="!userType" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="menuContacto">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" class="btnMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="tituloMenu">
+      {{ titulo | uppercase }} <ion-icon name="finger-print"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="arribaRefresh($event)" class="refresher">
+    <ion-refresher-content pullingIcon="arrow-down" refreshingSpinner="dots"></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list>
+    <!-- <ion-item class="ionLogoIls" align-items-center>
+      <img src="../../assets/imgs/log-ils.png" class="logIls">
+    </ion-item> -->
+    <ion-item *ngIf="localParamAgenMaster != 'N/A' && userType" [ngStyle]="{'color': colorsPlatf.COLOR_MENU_BACKEND}">
+      <img [src]="imgPlatf" class="imgAgencia">
+      {{ nomPlatf }}
+    </ion-item>
+
+    <ion-item [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="ion-text-center">
+      <img [src]="logo" class="imgAgencia">
+      {{nomClient}}
+    </ion-item>
+
+    <p class="spinner" *ngIf="datosUser==null && userType">
+      <ion-spinner name="crescent"></ion-spinner>
+    </p>
+
+    <div *ngIf="userType && datosPlatf">
+      <ion-item>
+        <h4 [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="ion-text-wrap"> {{ 'CONTACTO.plataforma' | translate}}</h4>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="ion-text-wrap">
+          <!-- <ion-grid>
+            <ion-row *ngIf="datosPlatf[2].NAME">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.plataforma' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].NAME }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[0].parameter_value">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.correo' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[0].parameter_value }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].address_parameter">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.direccion' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].address_parameter }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].phone1.length > 7">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.telefono' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].phone1 }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].phone2.length > 7">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.telefono' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].phone2 }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].phone3.length > 7">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.telefono' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].phone3 }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].phone4.length > 7">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.telefono' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].phone4 }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[1].parameter_value.length > 7">
+              <ion-col size="12">
+                <ion-icon name="logo-whatsapp" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+                {{ datosPlatf[1].parameter_value }}
+
+                <ion-button *ngIf="whatsapp == true" href="https://wa.me/{{ datosPlatf[1].parameter_value | slice}}"
+                  size="small" fill="clear" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="btnPersonalizado">
+                  {{ 'CONTACTO.envia_whats' | translate }}
+                </ion-button>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="paisAgencia">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.pais' | translate }} </b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ paisAgencia }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].id_state">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.estado' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].id_state }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].id_city">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.ciudad' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].id_city }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="datosPlatf[2].zip_code">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.codigo_postal' | translate }}</b>
+              </ion-col>
+
+              <ion-col size="8">
+                {{ datosPlatf[2].zip_code }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="webAgencia">
+              <ion-col size="4">
+                <b>{{ 'CONTACTO.web' | translate }} </b>
+              </ion-col>
+
+              <ion-col size="8">
+                <a (click)="navegadorSitioAgencia(webAgencia,$event)">
+                  <ion-icon name="link" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>{{ webAgencia }}
+                </a>
+              </ion-col>
+            </ion-row>
+
+          </ion-grid> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <p *ngIf="datosPlatf[2].NAME"> <b>{{ 'CONTACTO.plataforma' | translate }}</b> {{ datosPlatf[2].NAME }} </p>
+          <p *ngIf="datosPlatf[0].parameter_value"> <b>{{ 'CONTACTO.correo' | translate }}</b>
+            {{ datosPlatf[0].parameter_value }} </p>
+          <p *ngIf="datosPlatf[2].address_parameter">
+            <b>{{ 'CONTACTO.direccion' | translate }}</b>
+            <ion-text class="direccionTexto">{{ datosPlatf[2].address_parameter }} </ion-text>
+          </p>
+          <p *ngIf="datosPlatf[2].phone1.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+            {{ datosPlatf[2].phone1 }} </p>
+          <p *ngIf="datosPlatf[2].phone2.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+            {{ datosPlatf[2].phone2 }} </p>
+          <p *ngIf="datosPlatf[2].phone3.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+            {{ datosPlatf[2].phone3 }} </p>
+          <p *ngIf="datosPlatf[2].phone4.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+            {{ datosPlatf[2].phone4 }} </p>
+          <p *ngIf="datosPlatf[1].parameter_value.length > 7">
+            <ion-icon name="logo-whatsapp" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+            {{ datosPlatf[1].parameter_value }}
+            <ion-button *ngIf="whatsapp == true" href="https://wa.me/{{ datosPlatf[1].parameter_value | slice}}"
+              size="small" fill="clear" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="btnPersonalizado">
+              {{ 'CONTACTO.envia_whats' | translate }}
+            </ion-button>
+          </p>
+          <p *ngIf="paisAgencia"> <b>{{ 'CONTACTO.pais' | translate }} </b> {{ paisAgencia }} </p>
+          <p *ngIf="datosPlatf[2].id_state"> <b>{{ 'CONTACTO.estado' | translate }}</b> {{ datosPlatf[2].id_state }}
+          </p>
+          <p *ngIf="datosPlatf[2].id_city"> <b>{{ 'CONTACTO.ciudad' | translate }}</b> {{ datosPlatf[2].id_city }} </p>
+          <p *ngIf="datosPlatf[2].zip_code"> <b>{{ 'CONTACTO.codigo_postal' | translate }}</b>
+            {{ datosPlatf[2].zip_code }} </p>
+          <p *ngIf="webAgencia"> <b>{{ 'CONTACTO.web' | translate }} </b>
+            <a (click)="navegadorSitioAgencia(webAgencia,$event)">
+              <ion-icon name="link" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>{{ webAgencia }}
+            </a>
+          </p>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <div *ngIf="datosAgente">
+      <ion-item>
+        <h4 [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="ion-text-wrap"> {{ 'CONTACTO.agencia' | translate }}
+          {{datosAgente[0].nombreAgencia }} </h4>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="ion-text-wrap" *ngFor="let agente of datosAgente">
+          <p *ngIf="agente.id_broker"> <b>{{ 'CONTACTO.id_broker' | translate }}</b> {{ agente.id_broker }} </p>
+          <p *ngIf="agente.dominio"> <b>{{ 'CONTACTO.dominio' | translate }}</b>
+            <a (click)="navegadorSitioAgencia(agente.dominio,$event)">
+              <ion-icon name="link" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>{{ agente.dominio }}
+            </a>
+          </p>
+          <p *ngIf="agente.email_from"> <b>{{ 'CONTACTO.correo' | translate }}</b> {{ agente.email_from }} </p>
+          <p *ngIf="agente.email_cotizacion"> <b>{{ 'CONTACTO.correo_cotiza' | translate }}</b>
+            {{ agente.email_cotizacion }} </p>
+          <p *ngIf="agente.skype"> <b>{{ 'CONTACTO.skype' | translate }}</b> {{ agente.skype }} </p>
+          <p *ngIf="agente.whatsapp">
+            <b>
+              <ion-icon name="logo-whatsapp" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+              {{ 'CONTACTO.whatsapp' | translate }}
+            </b> {{ agente.whatsapp }}
+            <ion-button *ngIf="whatsapp == true" href="https://wa.me/{{ agente.whatsapp | slice}}" size="small"
+              fill="clear" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="btnPersonalizado">
+              {{ 'CONTACTO.envia_whats' | translate }}
+            </ion-button>
+          </p>
+          <p *ngIf="agente.prefijo_ref"> <b>{{ 'CONTACTO.pref_agente' | translate }}</b> {{ agente.prefijo_ref }} </p>
+          <p *ngIf="agente.instagram"> <b>{{ 'CONTACTO.instagram' | translate }}</b> {{ agente.instagram }} </p>
+          <p *ngIf="agente.facebook"> <b>{{ 'CONTACTO.facebook' | translate }}</b> {{ agente.facebook }} </p>
+          <p *ngIf="agente.pagina_web"> <b>{{ 'CONTACTO.pag_web' | translate }}</b>
+            <a (click)="navegadorSitioAgencia(agente.pagina_web,$event)">
+              <ion-icon name="link" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>{{ agente.pagina_web }}
+            </a>
+          </p>
+          <p *ngIf="agente.nivel"> <b>{{ 'CONTACTO.nivel_agencia' | translate }}</b> {{ agente.nivel }} <u
+              *ngIf="agenciaMaster">{{ 'CONTACTO.master' | translate }}</u> </p>
+          <p *ngIf="agente.direccion"> <b>{{ 'CONTACTO.direccion' | translate }}</b> {{ agente.direccion }} </p>
+          <p *ngIf="agente.pais"> <b>{{ 'CONTACTO.pais' | translate }}</b> {{ agente.pais }} </p>
+          <p *ngIf="agente.estado"> <b>{{ 'CONTACTO.estado' | translate }}</b> {{ agente.estado }} </p>
+          <p *ngIf="agente.ciudad"> <b>{{ 'CONTACTO.ciudad' | translate }}</b> {{ agente.ciudad }} </p>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <div *ngIf="userType && datosUser">
+
+      <ion-item>
+        <h4 [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="ion-text-wrap"> {{ 'CONTACTO.inf_usuario' | translate }}
+        </h4>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="ion-text-wrap">
+          <p *ngIf="datosUser.id"> <b>{{ 'CONTACTO.id_usuario' | translate }}</b> {{ datosUser.id }} </p>
+          <p *ngIf="datosUser.firstname"> <b>{{ 'CONTACTO.nombre' | translate | titlecase }}</b>
+            {{ datosUser.firstname }} </p>
+          <p *ngIf="datosUser.lastname"> <b>{{ 'CONTACTO.apellido' | translate | titlecase }}</b>
+            {{ datosUser.lastname }} </p>
+          <p *ngIf="datosUser.email"> <b>{{ 'CONTACTO.correo' | translate }}</b> {{ datosUser.email }} </p>
+          <p *ngIf="datosUser.phone"> <b>{{ 'CONTACTO.telefono' | translate }}</b> {{ datosUser.phone }} </p>
+          <p *ngIf="datosUser.user_type"> <b>{{ 'CONTACTO.tipo_usuario' | translate }}</b> {{ datosUser.user_type }}
+          </p>
+          <p *ngIf="datosUser.pais"> <b>{{ 'CONTACTO.pais' | translate }}</b> {{ datosUser.pais }} </p>
+        </ion-label>
+      </ion-item>
+    </div>
+
+  </ion-list>
+
+  <div *ngIf="!userType && datosPlatf">
+    <ion-item>
+      <h4 [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="ion-text-wrap"> {{ 'CONTACTO.plataforma' | translate }}</h4>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">
+        <p *ngIf="datosPlatf[2].NAME"> <b>{{ 'CONTACTO.plataforma' | translate }}</b> {{ datosPlatf[2].NAME }} </p>
+        <p *ngIf="datosPlatf[0].parameter_value"> <b>{{ 'CONTACTO.correo' | translate }}</b>
+          {{ datosPlatf[0].parameter_value }} </p>
+        <p *ngIf="datosPlatf[2].address_parameter">
+          <b>{{ 'CONTACTO.direccion' | translate }}</b>
+          <ion-text class="direccionTexto">{{ datosPlatf[2].address_parameter }}</ion-text>
+        </p>
+        <p *ngIf="datosPlatf[2].phone1.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+          {{ datosPlatf[2].phone1 }} </p>
+        <p *ngIf="datosPlatf[2].phone2.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+          {{ datosPlatf[2].phone2 }} </p>
+        <p *ngIf="datosPlatf[2].phone3.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+          {{ datosPlatf[2].phone3 }} </p>
+        <p *ngIf="datosPlatf[2].phone4.length > 7"> <b>{{ 'CONTACTO.telefono' | translate }}</b>
+          {{ datosPlatf[2].phone4 }} </p>
+        <p *ngIf="datosPlatf[1].parameter_value.length > 7">
+          <ion-icon name="logo-whatsapp" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>
+          {{ datosPlatf[1].parameter_value }}
+          <ion-button *ngIf="whatsapp == true" href="https://wa.me/{{ datosPlatf[1].parameter_value | slice}}"
+            size="small" fill="clear" [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="btnPersonalizado">
+            {{ 'CONTACTO.envia_whats' | translate }}
+          </ion-button>
+        </p>
+        <p *ngIf="paisAgencia"> <b>{{ 'CONTACTO.pais' | translate }}</b> {{ paisAgencia }} </p>
+        <p *ngIf="datosPlatf[2].id_state"> <b>{{ 'CONTACTO.estado' | translate }}</b> {{ datosPlatf[2].id_state }} </p>
+        <p *ngIf="datosPlatf[2].id_city"> <b>{{ 'CONTACTO.ciudad' | translate }}</b> {{ datosPlatf[2].id_city }} </p>
+        <p *ngIf="datosPlatf[2].zip_code"> <b>{{ 'CONTACTO.codigo_postal' | translate }}</b>
+          {{ datosPlatf[2].zip_code }} </p>
+        <p *ngIf="webAgencia"> <b>{{ 'CONTACTO.web' | translate }} </b>
+          <a (click)="navegadorSitioAgencia(webAgencia,$event)">
+            <ion-icon name="link" [ngStyle]="{'color': COLOR_MENU_BACKEND}"></ion-icon>{{ webAgencia }}
+          </a>
+        </p>
+      </ion-label>
+    </ion-item>
+  </div>
+
+</ion-content>
+
+<ion-footer class="classFooter">
+  <ion-toolbar class="footerToolbar">
+    <ion-title class=footerTitle>{{ 'FOOTER.pwils' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-footer>

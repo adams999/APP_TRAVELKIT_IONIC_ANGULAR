@@ -1,0 +1,112 @@
+<ion-header>
+  <ion-toolbar [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="menuLogin">
+
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" class="btnMenu"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title class="tituloMenu">{{ nomClient | uppercase }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <p *ngIf="imgLoaging == false" class="spinnerLogoAgencia">
+    <ion-spinner name="crescent"></ion-spinner>
+  </p>
+
+  <div class="divLogo">
+    <img class="imgLogo" [src]="logo" (load)="cargaImg($event)" useImg />
+  </div>
+
+  <form [formGroup]="loginUser">
+    <ion-item>
+      <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">{{ 'LOGIN.usuario' | translate }}
+      </ion-label>
+      <ion-input type="text" [(ngModel)]="dataA.user" formControlName="user"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">{{ 'LOGIN.contra' | translate }}
+      </ion-label>
+      <ion-input type="password" [(ngModel)]="dataA.password" formControlName="password"></ion-input>
+    </ion-item>
+    <ion-button class="btnLogueo" [ngStyle]="{'background': COLOR_MENU_BACKEND}" expand="block"
+      [disabled]="!loginUser.valid" (click)="enviarDatosAgente(loginUser.value)" fill="clear">
+      {{ 'LOGIN.ingresar' | translate }}
+    </ion-button>
+  </form>
+
+
+  <!-- <div>
+      <ion-segment color="primary" [(ngModel)]="segmento" (click)="funSegmento(segmento)">
+        <ion-segment-button value="agente" >
+          agente <ion-icon color="ilsAdmin" name="paper-plane" ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
+        </ion-segment-button>
+        <ion-segment-button value="cliente" >
+          cliente <ion-icon color="ilsAdmin" name="contact" ios="ios-contact" md="md-contact"></ion-icon>
+        </ion-segment-button>
+      </ion-segment>
+      
+      <ion-card >
+        <img src="../../assets/imgs/login-ils.jpg"/>
+        <div class="card-title">  
+          <img src="../../assets/imgs/log-ils.png"/> 
+        </div>
+      </ion-card>
+  
+    </div>
+  
+    <div [ngSwitch]="segmento" >
+      <ion-list *ngSwitchCase="'agente'"  >
+        <h5 class="h6Aviso">Agente <ion-icon name="paper-plane" ios="ios-paper-plane" md="md-paper-plane"></ion-icon></h5>
+        <form ion-row [formGroup]="loginUser" #formDir="ngForm" (ngSubmit)="enviarDatosAgente(loginUser.value)">
+          <ion-item  col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+            <ion-label color="primary" floating>Usuario: </ion-label>
+            <ion-input type="text"  [(ngModel)]="dataA.user" (ngModelChange)="dataA.user" name="user" formControlName="user"></ion-input>
+          </ion-item>
+          
+          <ion-item  col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+            <ion-label color="primary" floating>Contraseña: </ion-label>
+            <ion-input  type="password"  [(ngModel)]="dataA.password" name="password" formControlName="password"></ion-input>
+          </ion-item>
+  
+          <button col-xs-12 col-sm-12 col-md-12 push-lg-4 col-lg-4 push-xl-4 col-xl-4 ion-button [disabled]="!loginUser.valid" type="submit" block >Inciar Sessión</button>
+        </form>
+  
+      </ion-list>
+  
+      <ion-list *ngSwitchCase="'cliente'">
+        <h5 class="h6Aviso">Cliente <ion-icon name="contact" ios="ios-contact" md="md-contact"></ion-icon><br>Buscar Voucher <ion-icon name="card" ios="ios-card" md="md-card"></ion-icon></h5>
+        <form ion-row [formGroup]="loginUserVoucher" #formDir="ngForm" (ngSubmit)="enviarDatosCliente(loginUserVoucher.value)">
+          <ion-item  col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+            <ion-label color="primary" floating>Codigo Voucher: </ion-label>
+            <ion-input type="text" [(ngModel)]="dataC.codVoucher" (ngModelChange)="dataC.codVoucher" name="codVoucher" formControlName="codVoucher"></ion-input>
+          </ion-item>
+          
+          <ion-item  col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+            <ion-label color="primary" floating>Documento Pasajero: </ion-label>
+            <ion-input  type="number"  [(ngModel)]="dataC.documento" name="documento" formControlName="documento"></ion-input>
+          </ion-item>
+  
+          <button col-xs-12 col-sm-12 col-md-12 push-lg-4 col-lg-4 push-xl-4 col-xl-4 ion-button [disabled]="!loginUserVoucher.valid" type="submit" block >Buscar Voucher</button>
+        </form>
+  
+      </ion-list>
+    </div>
+  
+    <h6 *ngIf="!segmento" class="h6Aviso">
+        <ion-icon name="alert" ios="ios-alert" md="md-alert"> </ion-icon> 
+        Selecciona una Opción para Acceder a la Plataforma...
+    </h6> -->
+
+
+
+
+
+
+
+
+
+
+
+</ion-content>

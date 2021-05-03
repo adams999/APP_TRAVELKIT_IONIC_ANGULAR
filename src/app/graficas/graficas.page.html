@@ -1,0 +1,183 @@
+<ion-header>
+  <ion-toolbar class="menu" [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" class="btnMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="tituloMenu">
+      {{ 'GRAFICAS.estadisticas' | translate | uppercase }} <ion-icon name="stats-chart" [ngStyle]="{'color': 'whith'}">
+      </ion-icon>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="arribaRefresh($event)" class="refresher">
+    <ion-refresher-content pullingIcon="arrow-down" refreshingSpinner="dots"></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-img class="logoAgencia" [src]="logo"></ion-img>
+
+  <p [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloBuscar">
+    {{ 'GRAFICAS.filt_fechas' | translate }} <ion-icon name="search"></ion-icon>
+  </p>
+
+  <ion-item class="fechas ion-align-items-center">
+    <ion-label position="floating" [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'GRAFICAS.fecha_inicio' | translate }}
+    </ion-label>
+    <ion-datetime
+      monthNames="{{ 'MESES.01' | translate }}, {{ 'MESES.02' | translate }}, {{ 'MESES.03' | translate }}, {{ 'MESES.04' | translate }}, {{ 'MESES.05' | translate }}, {{ 'MESES.06' | translate }}, {{ 'MESES.07' | translate }}, {{ 'MESES.08' | translate }}, {{ 'MESES.09' | translate }}, {{ 'MESES.10' | translate }}, {{ 'MESES.11' | translate }}, {{ 'MESES.12' | translate }}"
+      (ionChange)="changeFecha()" cancelText="{{ 'GRAFICAS.atras' | translate }}"
+      doneText="{{ 'GRAFICAS.siguiente' | translate }}" displayFormat="DD/MMMM/YYYY" pickerFormat="YYYY-MMMM-DD"
+      [(ngModel)]="startDate" min="{{ 2011 }}" max="{{ fechaHoy }}"></ion-datetime>
+  </ion-item>
+
+  <ion-item class="fechas ion-align-items-center" *ngIf="startDate">
+    <ion-label position="floating" [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'GRAFICAS.fecha_final' | translate }}
+    </ion-label>
+    <ion-datetime
+      monthNames="{{ 'MESES.01' | translate }}, {{ 'MESES.02' | translate }}, {{ 'MESES.03' | translate }}, {{ 'MESES.04' | translate }}, {{ 'MESES.05' | translate }}, {{ 'MESES.06' | translate }}, {{ 'MESES.07' | translate }}, {{ 'MESES.08' | translate }}, {{ 'MESES.09' | translate }}, {{ 'MESES.10' | translate }}, {{ 'MESES.11' | translate }}, {{ 'MESES.12' | translate }}"
+      cancelText="{{ 'GRAFICAS.atras' | translate }}" doneText="{{ 'GRAFICAS.siguiente' | translate }}"
+      displayFormat="DD/MMMM/YYYY" pickerFormat="YYYY-MMMM-DD" [(ngModel)]="endDate" min="{{ startDate }}"
+      max="{{ fechaHoy }}"></ion-datetime>
+  </ion-item>
+
+  <div class="btnBuscar">
+    <ion-button *ngIf="startDate && endDate" color="success" (click)="buscar()" size="small">
+      {{ 'GRAFICAS.buscar' | translate }} <ion-icon name="search"></ion-icon>
+    </ion-button>
+  </div>
+
+  <p class="pFechasInicales" *ngIf="busqueda == null">
+    <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'GRAFICAS.year' | translate }} </b> {{ fechaHoy | date: 'yyyy' }}
+  </p>
+  <br>
+
+  <p *ngIf="noResult" class="noResult" [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+    {{ 'GRAFICAS.no_resultados' | translate }}
+  </p>
+
+  <ion-item [hidden]="noResult" id="hGrafCat" (click)="hiddenGraficaCat(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel" (click)="scrollAGrafica('','hGrafCat')">
+      {{ 'GRAFICAS.categ_plan' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafCat==false" slot="end"
+      (click)="scrollAGrafica('','hGrafCat')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafCat==true" slot="end"
+      (click)="scrollAGrafica('','hGrafCat')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico1" [hidden]="!hGrafCat">
+    <div id="grafica1" [hidden]="noResult" class="grafica1"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafNet" (click)="hiddenGraficaNet(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel" (click)="scrollAGrafica('','hGrafNet')">
+      {{ 'GRAFICAS.netos' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafNet==false" slot="end"
+      (click)="scrollAGrafica('','hGrafNet')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafNet==true" slot="end"
+      (click)="scrollAGrafica('','hGrafNet')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico2" [hidden]="!hGrafNet">
+    <div id="grafica2" [hidden]="noResult" class="grafica2"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafOr" (click)="hiddenGraficaOr(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel" (click)="scrollAGrafica('','hGrafOr')">
+      {{ 'GRAFICAS.orig_viaje' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafOr==false" slot="end"
+      (click)="scrollAGrafica('','hGrafOr')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafOr==true" slot="end"
+      (click)="scrollAGrafica('','hGrafOr')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico3" [hidden]="!hGrafOr">
+    <div id="grafica3" [hidden]="noResult" class="grafica3"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafRankCant" (click)="hiddenGraficaRankCant(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel"
+      (click)="scrollAGrafica('','hGrafRankCant')">
+      {{ 'GRAFICAS.rank_agen_cant' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafRankCant==false" slot="end"
+      (click)="scrollAGrafica('','hGrafRankCant')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafRankCant==true" slot="end"
+      (click)="scrollAGrafica('','hGrafRankCant')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico5" [hidden]="!hGrafRankCant">
+    <div id="grafica5" [hidden]="noResult" class="grafica5"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafRankMone" (click)="hiddenGraficaRankMone(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel"
+      (click)="scrollAGrafica('','hGrafRankMone')">
+      {{ 'GRAFICAS.rank_agen_mon' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafRankMone==false" slot="end"
+      (click)="scrollAGrafica('','hGrafRankMone')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafRankMone==true" slot="end"
+      (click)="scrollAGrafica('','hGrafRankMone')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico6" [hidden]="!hGrafRankMone">
+    <div id="grafica6" [hidden]="noResult" class="grafica6"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafEdaCant" (click)="hiddenGraficaEdadCant(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel"
+      (click)="scrollAGrafica('','hGrafEdaCant')">
+      {{ 'GRAFICAS.dist_edad_cant' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafEdaCant==false" slot="end"
+      (click)="scrollAGrafica('','hGrafEdaCant')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafEdaCant==true" slot="end"
+      (click)="scrollAGrafica('','hGrafEdaCant')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico7" [hidden]="!hGrafEdaCant">
+    <div id="grafica7" [hidden]="noResult" class="grafica7"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafEdaMont" (click)="hiddenGraficaEdadMont(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel"
+      (click)="scrollAGrafica('','hGrafEdaMont')">
+      {{ 'GRAFICAS.dist_edad_mon' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafEdaMont==false" slot="end"
+      (click)="scrollAGrafica('','hGrafEdaMont')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafEdaMont==true" slot="end"
+      (click)="scrollAGrafica('','hGrafEdaMont')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico8" [hidden]="!hGrafEdaMont">
+    <div id="grafica8" [hidden]="noResult" class="grafica8"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafTipoFiltro" (click)="hiddenGraficaTipoFiltro(true)" *ngIf="busqueda">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel"
+      (click)="scrollAGrafica('','hGrafTipoFiltro')">
+      {{ 'GRAFICAS.tipo_ventas' | translate }}
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafTipoFiltro==false" slot="end"
+      (click)="scrollAGrafica('','hGrafTipoFiltro')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafTipoFiltro==true" slot="end"
+      (click)="scrollAGrafica('','hGrafTipoFiltro')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico9" [hidden]="!hGrafTipoFiltro">
+    <div id="grafica9" [hidden]="noResult" class="grafica9"></div>
+  </div>
+
+  <ion-item [hidden]="noResult" id="hGrafTipoAnual" (click)="hiddenGraficaTipoAnual(true)">
+    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="tituloLabel"
+      (click)="scrollAGrafica('','hGrafTipoAnual')">
+      {{ 'GRAFICAS.tipo_ventas_year' | translate }} {{ iniYear | date:"yyyy" }})
+    </ion-label>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-down" *ngIf="hGrafTipoAnual==false" slot="end"
+      (click)="scrollAGrafica('','hGrafTipoAnual')"></ion-icon>
+    <ion-icon [ngStyle]="{'color': color_menu_barra_hover}" name="caret-up" *ngIf="hGrafTipoAnual==true" slot="end"
+      (click)="scrollAGrafica('','hGrafTipoAnual')"></ion-icon>
+  </ion-item>
+  <div class="divGrafico10" [hidden]="!hGrafTipoAnual">
+    <div id="grafica10" [hidden]="noResult" class="grafica10"></div>
+  </div>
+
+
+</ion-content>

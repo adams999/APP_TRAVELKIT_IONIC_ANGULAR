@@ -1,0 +1,75 @@
+<h4 class="h1Modal" [ngStyle]="{'color': color_menu_barra_hover}">
+  <b>{{ 'POPOVER.selec_filtros_aplicar' | translate }}</b>
+</h4>
+
+<ion-item class="ion-text-wrap ion-align-items-center">
+  <ion-label class="labelFechas ion-align-items-center">
+    <ion-icon *ngIf="status" name="checkmark" color="success"></ion-icon>&nbsp;
+    <ion-button (click)="alertaStatus()" class="btnFechas" fill="clear" [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+      <ion-icon name="radio-button-off"></ion-icon>&nbsp;{{ 'POPOVER.estatus' | translate }}
+    </ion-button>
+  </ion-label>
+</ion-item>
+
+<ion-item *ngIf="listAgencys != null" class="ion-text-wrap ion-align-items-center">
+  <ion-label position="floating" [ngStyle]="{'color': COLOR_MENU_BACKEND}">{{ 'POPOVER.sel_agenc' | translate }}
+  </ion-label>
+  <ion-select [(ngModel)]="agencySelect" placeholder="{{ 'POPOVER.sel_agenc' | translate }}"
+    okText="{{ 'POPOVER.aceptar' | translate }}" cancelText="{{ 'POPOVER.cancelar' | translate }}">
+    <ion-select-option *ngFor="let agencia of listAgencys" value="{{agencia.id}}">{{ agencia.name }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-item class="ion-text-wrap ion-align-items-center">
+  <ion-label class="labelFechas ion-align-items-center">
+    <p class="ion-align-items-center">
+      <!-- <b align-items-center>Fecha Salida:</b> -->
+      <ion-button (click)="datePickerSalida()" class="btnFechas" fill="clear"
+        [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+        <ion-icon name="calendar"></ion-icon>&nbsp;{{ 'POPOVER.fecha_salida' | translate }}
+      </ion-button>
+    </p>
+    <p *ngIf="salidaConv">
+      <ion-icon name="checkmark" color="success"></ion-icon> {{ salidaConv }}
+    </p>
+
+  </ion-label>
+</ion-item>
+
+<ion-item class="ion-text-wrap ion-align-items-center" *ngIf="salida">
+  <ion-label class="labelFechas ion-align-items-center">
+    <p class="ion-align-items-center">
+      <!-- <b align-items-center>Fecha Regreso:</b> -->
+      <ion-button *ngIf="salida !== fechaHoy" (click)="datePickerllegada()" class="btnFechas" fill="clear"
+        [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+        <ion-icon name="calendar"></ion-icon>&nbsp;{{ 'POPOVER.fecha_regreso' | translate }}
+      </ion-button>
+    </p>
+    <p *ngIf="llegadaConv && salida != fechaHoy">
+      <ion-icon name="checkmark" color="success"></ion-icon> {{ llegadaConv }}
+    </p>
+    <p *ngIf="salida == fechaHoy">
+      <ion-icon name="checkmark" color="success"></ion-icon> {{ llegadaActualConv }}
+    </p>
+  </ion-label>
+
+</ion-item>
+
+<p class="alertaModal" *ngIf="salida!=null && llegada==null" [ngStyle]="{'color': color_menu_barra_hover}">
+  {{ 'POPOVER.selec_rang_busq' | translate }}
+</p>
+
+<div class="divButtons">
+  <ion-button color="danger" (click)="elimpopover()">
+    <ion-icon name="close"></ion-icon>
+  </ion-button>
+  <ion-button *ngIf="(salida != null && llegada != null) || status != null || agencySelect != null" color="warning"
+    (click)="elimParametros()">
+    <ion-icon name="trash"></ion-icon>
+  </ion-button>
+  <ion-button *ngIf="(salida != null && llegada != null) || status != null || agencySelect != null" color="success"
+    (click)="enviarParametros()">
+    <ion-icon name="search"></ion-icon>
+  </ion-button>
+</div>

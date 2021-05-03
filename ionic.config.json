@@ -1,0 +1,8 @@
+{
+  "name": "Travelkit",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

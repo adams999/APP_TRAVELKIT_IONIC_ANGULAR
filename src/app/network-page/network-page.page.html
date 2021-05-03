@@ -1,0 +1,10 @@
+<ion-content class="ion-padding">
+  <h2 class="avisoConexion">{{ 'NETWORK-PAGE.alerta_conexion' | translate }} </h2>
+  <p class="pIconNetwork">
+    <ion-icon class="iconConexion" name="wifi"></ion-icon>
+  </p>
+  <div class="divExit" *ngIf="plataforma!='IOS'">
+    <ion-button color="dark" (click)="exitApp()" size="small" fill="outline">{{ 'NETWORK-PAGE.salir' | translate }}
+    </ion-button>
+  </div>
+</ion-content>

@@ -1,0 +1,6 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "Travelkit",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}

@@ -1,0 +1,31 @@
+<ion-content>
+
+  <h5 class="h1Modal">
+    Selecciona el Rango de Fecha
+  </h5>
+  <ion-item>
+    <ion-label>Salida:</ion-label>
+    <ion-datetime [(ngModel)]="fecha1" display-format="DD-MMMM-YYYY" picker-format="DD-MMMM-YYYY" min="2011"
+      max="{{fechaActual}}" [(ngModel)]="fechaSalida">
+    </ion-datetime>
+  </ion-item>
+
+  <ion-item *ngIf="fecha1">
+    <ion-label>Regreso:</ion-label>
+    <ion-datetime [(ngModel)]="fecha2" display-format="DD-MMMM-YYYY" picker-format="DD-MMMM-YYYY" min="{{fecha1}}"
+      max="{{fechaActual}}" [(ngModel)]="fechaRegreso">
+    </ion-datetime>
+  </ion-item>
+
+  <p class="alertaModal" *ngIf="fecha1==null || fecha2==null"><a>Selecciona Rango de Fechas para Realizar la
+      Busqueda!</a></p>
+  <div class="divButtons">
+    <button ion-button color="danger" (click)="elimpopover()">
+      <ion-icon name="close"></ion-icon>
+    </button>
+    <button *ngIf="fecha1!=null && fecha2!=null" ion-button color="secondary"
+      (click)="enviarFechas(fechaSalida, fechaRegreso)">
+      <ion-icon name="search"></ion-icon>
+    </button>
+  </div>
+</ion-content>

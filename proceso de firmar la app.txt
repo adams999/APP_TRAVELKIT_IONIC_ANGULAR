@@ -1,0 +1,47 @@
+//////////////////////////////comando para generar el apk para poder despues ser firmada 
+ionic cordova build android --prod --release
+
+
+//////////////////////////////comando para generar llave encriptada exclusivo para la app
+- keytool -genkey -v -keystore firma_travelkit.keystore -alias firma_travelkit -keyalg RSA -keysize 2048 -validity 10000
+
+clave de firma : d2pwsc
+
+�Cu�les son su nombre y su apellido?
+  [Unknown]:  instep
+�Cu�l es el nombre de su unidad de organizaci�n?
+  [Unknown]:  IlsTechnik
+�Cu�l es el nombre de su organizaci�n?
+  [Unknown]:  IlsTechnik
+�Cu�l es el nombre de su ciudad o localidad?
+  [Unknown]:  venezuela
+�Cu�l es el nombre de su estado o provincia?
+  [Unknown]:  tachira
+�Cu�l es el c�digo de pa�s de dos letras de la unidad?
+  [Unknown]:  ve
+
+Luego se da enter para decir que si es la misma contrase;a para el almacen de claves
+
+
+
+
+////////////////////////////comando para firmar con la llave anteriormente creada la app para poder firmarla 
+-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore firma_travelkit.keystore app-release-unsigned.apk firma_travelkit
+
+
+//////////////////////////comando para arreglar los binarios de la app para que play store los acepte y el ultimo nombre es el nombre como se quiere generar la appfirmada.apk
+-zipalign -v 4 app-release-unsigned.apk TRAVELKIT.apk
+
+
+---------------------------------------------GRADLE BUNDLE-------------------------------------------
+
+/////////////////////////EJECUTAR PARA GENERAR ARCHIVO .AAB ubicarse en platform/android/
+-./gradlew bundle
+
+/////////////////////////luego pegar la firma en la carpeta bundle 
+
+//////////////////////////luego ejecutar este comando
+-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore firma_travelkit.keystore app-release.aab firma_travelkit
+
+////////////////////////luego actualizar binarios de la app .aab
+-zipalign -v 4 app-release.aab TRAVELKIT.aab

@@ -1,0 +1,1834 @@
+<ion-header>
+
+    <ion-toolbar class="menu ion-text-wrap" [ngStyle]="{'background': COLOR_MENU_BACKEND}">
+        <ion-title class="ion-text-wrap tituloMenu"> {{ 'FORM-PAGO.compra' | translate | uppercase }} &nbsp;
+            <ion-icon name="cash"></ion-icon>
+        </ion-title>
+
+        <ion-buttons slot="end">
+            <ion-button (click)="cerrarModal()">
+                <ion-icon item-right class="iconCerrarModal" name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+    <ion-card>
+        <img src="../../assets/imgs/ventana-avion.jpg" />
+        <div class="card-title">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="5">
+                    </ion-col>
+                    <ion-col size="2" class="colImg">
+                        <img class="imgLogo" [src]="logo" />
+                    </ion-col>
+                    <ion-col size="5">
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <b class="tituloImgAgencia">{{ nomClient }}</b> <br> {{ 'GET-PLANS.vuelo' | translate }} {{ dataVuelo[2] }}
+            -
+            {{ dataVuelo[3] }}
+            <p *ngIf="diasViaje" class="pDiasViaje"> <b>{{ 'GET-PLANS.dias_de_viaje' | translate }} </b> {{ diasViaje }}
+            </p>
+        </div>
+        <div class="card-subtitle">
+            <b>{{ 'GET-PLANS.categoria' | translate }} </b> {{ dataVuelo[4] }}<br><br>
+            <div class="card-subtitle">
+                <b>{{ 'GET-PLANS.origen' | translate }} </b> {{ dataVuelo[8] }}
+                <b>{{ 'GET-PLANS.destino' | translate }}</b>
+                {{ dataVuelo[9] }}
+                <br><br>
+                <b>{{ 'GET-PLANS.pasajeros' | translate }}</b> {{ dataVuelo[6].length }}
+                <br><b>{{ 'GET-PLANS.edades_pasajeros' | translate }}</b> {{ dataVuelo[6] }}
+            </div>
+        </div>
+    </ion-card>
+
+    <form [formGroup]="users">
+        <div>
+            <ion-button class="seccion" [ngStyle]="{'background':COLOR_MENU_BACKEND}"
+                (click)="funHiddenDivPasajeros('pasajeros')" expand="block" fill="clear">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="1">
+                            <ion-icon *ngIf="users.valid" color="success" name="checkmark" class="iconValidForm">
+                            </ion-icon>
+                            <ion-icon *ngIf="!users.valid && pasos[3]" color="danger" name="close"
+                                class="iconValidForm"></ion-icon>
+                        </ion-col>
+
+                        <ion-col size="10">
+                            {{ 'FORM-PAGO.ing_datos_pasaj' | translate }}
+                        </ion-col>
+
+                        <ion-col size="1">
+                            <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="pasajeros == false">
+                            </ion-icon>
+                            <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="pasajeros == true">
+                            </ion-icon>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-button>
+
+            <div *ngIf="pasajeros">
+
+                <div *ngFor="let pasaj of this.users.controls; let i = index" id="pasajeros">
+
+                    <ion-grid [formGroupName]="i">
+
+                        <ion-item (click)="funHiddenDivPasajero(i)" id="{{i}}" class="ion-activatable itemPasajero"
+                            [ngStyle]="{'background':color_menu_barra_hover}">
+                            <ion-ripple-effect></ion-ripple-effect>
+                            <ion-label>
+                                <h3 class="pasTitulo">
+                                    <ion-grid>
+                                        <ion-row>
+                                            <ion-col size="11">
+                                                <ion-icon *ngIf="users.controls[i].valid == false" name="alert"
+                                                    color="danger">
+                                                </ion-icon>
+                                                <ion-icon name="alert" color="warning"
+                                                    *ngIf="dataVuelo[6][i] > this.dataPlan.normal_age && dataVuelo[6][i] <= this.dataPlan.max_age">
+                                                </ion-icon>
+                                                {{ 'FORM-PAGO.pasajero' | translate }} {{i+1}}
+                                            </ion-col>
+
+                                            <ion-col size="1">
+                                                <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="caret-down"
+                                                    *ngIf="divHidden[i]==false"></ion-icon>
+                                                <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="caret-up"
+                                                    *ngIf="divHidden[i]==true"></ion-icon>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+                                </h3>
+                            </ion-label>
+                        </ion-item>
+
+                        <div *ngIf="divHidden[i]">
+                            <ion-row>
+                                <ion-col size="6">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].name.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.nombre' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="30" value="{{users.controls[i].value.name }}"
+                                            inputmode="text" type="text" formControlName="name"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="6">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].apellido.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.apellido' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="30" value="{{users.controls[i].value.apellido }}"
+                                            inputmode="text" type="text" formControlName="apellido">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="6">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].nacimiento.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.f_nacimiento' | translate }}
+                                        </ion-label>
+                                        <ion-datetime (ionChange)="calcEdadPas(users.value[i].nacimiento, i)"
+                                            monthNames="{{ 'MESES.01' | translate }}, {{ 'MESES.02' | translate }}, {{ 'MESES.03' | translate }}, {{ 'MESES.04' | translate }}, {{ 'MESES.05' | translate }}, {{ 'MESES.06' | translate }}, {{ 'MESES.07' | translate }}, {{ 'MESES.08' | translate }}, {{ 'MESES.09' | translate }}, {{ 'MESES.10' | translate }}, {{ 'MESES.11' | translate }}, {{ 'MESES.12' | translate }}"
+                                            cancelText="{{ 'GRAFICAS.atras' | translate }}"
+                                            doneText="{{ 'GRAFICAS.siguiente' | translate }}"
+                                            displayFormat="DD/MMMM/YYYY" pickerFormat="YYYY-MMMM-DD"
+                                            formControlName="nacimiento" max="{{fechaMaxPas}}" min="{{fechaMinPas}}">
+                                        </ion-datetime>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="3">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].edad.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.edad' | translate }}
+                                        </ion-label>
+                                        <ion-input value="{{users.controls[i].value.edad}}" inputmode="numeric" readonly
+                                            formControlName="edad">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="3">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].sexo.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.sexo' | translate }}
+                                        </ion-label>
+                                        <ion-select cancelText="{{ 'GRAFICAS.atras' | translate }}"
+                                            okText="{{ 'GRAFICAS.siguiente' | translate }}" formControlName="sexo"
+                                            interface="popover" value="{{users.controls[i].value.sexo}}">
+                                            <ion-select-option value="F">F</ion-select-option>
+                                            <ion-select-option value="M">M</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].pais.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.pais' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}" formControlName="pais"
+                                            value="{{users.controls[i].value.pais}}">
+                                            <ion-select-option *ngFor="let pais of paises" value="{{pais.iso_country}}">
+                                                {{ pais.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="5">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].tipoDoc.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.t_documento' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}"
+                                            formControlName="tipoDoc" value="{{users.controls[i].value.tipoDoc}}">
+                                            <ion-select-option value="PAS">{{ 'FORM-PAGO.pasaporte' | translate }}
+                                            </ion-select-option>
+                                            <ion-select-option value="CPF">CPF</ion-select-option>
+                                            <ion-select-option value="RG">RG</ion-select-option>
+                                            <ion-select-option value="DNI">DNI</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="7">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].documento.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.documento' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="30" inputmode="text" type="text"
+                                            formControlName="documento" value="{{users.controls[i].value.documento}}">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].correoP.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.correo_pasajero' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="50" inputmode="email" type="email"
+                                            formControlName="correoP">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="5">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].codigoTel.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.codigo' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}"
+                                            formControlName="codigoTel" value="{{users.controls[i].value.codigoTel}}">
+                                            <ion-select-option *ngFor="let codPhone of codigosPhones"
+                                                value="{{codPhone.cod_phone}}">
+                                                {{codPhone.cod_phone}} {{codPhone.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="7">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].TelefP.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.telefono' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="15" inputmode="tel" type="tel" formControlName="TelefP"
+                                            value="{{users.controls[i].value.TelefP}}"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            {{ 'FORM-PAGO.cond_med' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="500" inputmode="text" type="text"
+                                            formControlName="condMed">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="users.controls[i]['controls'].subTotal.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            <ion-icon name="alert" color="warning"
+                                                *ngIf="dataVuelo[6][i] > this.dataPlan.normal_age && dataVuelo[6][i] <= this.dataPlan.max_age"
+                                                slot="end">
+                                            </ion-icon>
+                                            {{ 'FORM-PAGO.sub_total' | translate }}
+                                        </ion-label>
+                                        <ion-input
+                                            value="{{users.controls[i].value.subTotal | TasaCambioPipe :dataPlan.tasa_cambio | number:'1.2-2'}}"
+                                            inputmode="text" type="text" readonly>
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+                        </div>
+                    </ion-grid>
+                </div>
+                <ion-button class="btnSiguiente" [ngStyle]="{'background': color_menu_barra_hover}" expand="block"
+                    [disabled]="!users.valid" fill="clear" (click)="pasoSiguiente(1,'contactoEmergencia')">
+                    {{ 'FORM-PAGO.siguiente' | translate }} <ion-icon *ngIf="users.valid" name="arrow-down"
+                        class="iconSiguiente"></ion-icon>
+                </ion-button>
+            </div>
+        </div>
+    </form>
+
+
+    <form [formGroup]="contacto" *ngIf="pasos[1]==true">
+        <div id="contactoEmergencia">
+            <ion-button class="seccion" [ngStyle]="{'background':COLOR_MENU_BACKEND}"
+                (click)="funHiddenDivContacto('conEmerg')" expand="block" fill="clear">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="1">
+                            <ion-icon *ngIf="contacto['valid']" color="success" name="checkmark" class="iconValidForm">
+                            </ion-icon>
+                            <ion-icon *ngIf="!contacto['valid'] && pasos[3]" color="danger" name="close"
+                                class="iconValidForm"></ion-icon>
+                        </ion-col>
+
+                        <ion-col size="10">
+                            {{ 'FORM-PAGO.contacto_emergencia' | translate }}
+                        </ion-col>
+
+                        <ion-col size="1">
+                            <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="conEmerg == false">
+                            </ion-icon>
+                            <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="conEmerg == true">
+                            </ion-icon>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-button>
+
+            <div *ngIf="conEmerg">
+                <div id="conEmerg">
+                    <ion-grid>
+                        <div>
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="contacto['controls']['nameE'].valid == false" name="alert"
+                                                color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.nombre_contacto' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="30" value="{{ contacto['controls'].nameE.value }}"
+                                            inputmode="text" type="text" formControlName="nameE"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="contacto['controls']['correoE'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.correo' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="50" inputmode="email" type="email"
+                                            formControlName="correoE">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="5">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="contacto['controls']['codigoTelE'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.codigo' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}"
+                                            formControlName="codigoTelE">
+                                            <ion-select-option *ngFor="let codPhone of codigosPhones"
+                                                value="{{codPhone.cod_phone}}">
+                                                {{codPhone.cod_phone}} {{codPhone.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="7">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="contacto['controls']['TelefPE'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.telefono' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="15" inputmode="tel" type="tel" formControlName="TelefPE">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+                        </div>
+                    </ion-grid>
+                </div>
+                <ion-button class="btnSiguiente" [ngStyle]="{'background': color_menu_barra_hover}" expand="block"
+                    [disabled]="!contacto['valid']" fill="clear" (click)="pasoSiguiente(2,'upgrades')">
+                    {{ 'FORM-PAGO.siguiente' | translate }} <ion-icon *ngIf="contacto['valid']" name="arrow-down"
+                        class="iconSiguiente">
+                    </ion-icon>
+                </ion-button>
+            </div>
+        </div>
+    </form>
+
+
+
+    <form [formGroup]="formDirHabit" *ngIf="pasos[5]==true">
+        <ion-button class="seccion" [ngStyle]="{'background':COLOR_MENU_BACKEND}"
+            (click)="funHiddenHabitacion('habitacion')" expand="block" fill="clear">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="1">
+                        <ion-icon *ngIf="formDirHabit['valid']" color="success" name="checkmark" class="iconValidForm">
+                        </ion-icon>
+                        <ion-icon *ngIf="!formDirHabit['valid'] && pasos[3]" color="danger" name="close"
+                            class="iconValidForm"></ion-icon>
+                    </ion-col>
+
+                    <ion-col size="10">
+                        {{ 'FORM-PAGO.dir_habit' | translate }}
+                    </ion-col>
+
+                    <ion-col size="1">
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="habitacion == false">
+                        </ion-icon>
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="habitacion == true">
+                        </ion-icon>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-button>
+
+        <div *ngIf="habitacion">
+            <div id="habitacion">
+                <ion-grid>
+                    <div>
+                        <ion-row>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                        <ion-icon *ngIf="formDirHabit['controls']['dir_pais'].valid == false"
+                                            name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                        {{ 'FORM-PAGO.pais' | translate }}
+                                    </ion-label>
+                                    <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                        cancelText="{{ 'COTIZADOR.cancelar' | translate }}" formControlName="dir_pais"
+                                        (ionChange)="funStatesHab()">
+                                        <ion-select-option *ngFor="let pais of paises" value="{{pais.iso_country}}">
+                                            {{ pais.description }}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-col size="6">
+                                <ion-item>
+                                    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                        <ion-icon *ngIf="formDirHabit['controls']['dir_provincia'].valid == false"
+                                            name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                        {{ 'FORM-PAGO.estado' | translate }}
+                                    </ion-label>
+                                    <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                        cancelText="{{ 'COTIZADOR.cancelar' | translate }}" [disabled]="!estados"
+                                        formControlName="dir_provincia" (ionChange)="funCitiesHab()">
+                                        <ion-select-option *ngFor="let estado of estados" value="{{estado.iso_state}}">
+                                            {{ estado.description }}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+
+                            <ion-col size="6">
+                                <ion-item>
+                                    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                        <ion-icon *ngIf="formDirHabit['controls']['dir_ciudad'].valid == false"
+                                            name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                        {{ 'FORM-PAGO.ciudad' | translate }}
+                                    </ion-label>
+                                    <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                        cancelText="{{ 'COTIZADOR.cancelar' | translate }}" [disabled]="!ciudades"
+                                        formControlName="dir_ciudad">
+                                        <ion-select-option *ngFor="let ciudad of ciudades" value="{{ciudad.iso_city}}">
+                                            {{ ciudad.description }}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-col size="12">
+                            <ion-item>
+                                <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                    <ion-icon *ngIf="formDirHabit['controls']['dir_cod_post'].valid == false"
+                                        name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                    {{ 'FORM-PAGO.codigo_postal' | translate }}
+                                </ion-label>
+                                <ion-input maxlength="20" inputmode="numeric" type="number"
+                                    formControlName="dir_cod_post">
+                                </ion-input>
+                            </ion-item>
+                        </ion-col>
+
+                        <ion-col size="12">
+                            <ion-item>
+                                <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                    <ion-icon *ngIf="formDirHabit['controls']['dir_direcion'].valid == false"
+                                        name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                    {{ 'FORM-PAGO.direccion' | translate }}
+                                </ion-label>
+                                <ion-input maxlength="100" inputmode="text" type="text" formControlName="dir_direcion">
+                                </ion-input>
+                            </ion-item>
+                        </ion-col>
+
+                        <ion-col size="12">
+                            <ion-item>
+                                <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                    <ion-icon *ngIf="formDirHabit['controls']['dir_direccion_alter'].valid == false"
+                                        name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                    {{ 'FORM-PAGO.dir_alter' | translate }}
+                                </ion-label>
+                                <ion-input maxlength="100" inputmode="text" type="text"
+                                    formControlName="dir_direccion_alter">
+                                </ion-input>
+                            </ion-item>
+                        </ion-col>
+
+                        <ion-button class="btnSiguiente" [ngStyle]="{'background': color_menu_barra_hover}"
+                            expand="block" [disabled]="!formDirHabit['valid']" fill="clear"
+                            (click)="pasoSiguiente(5,'upgrades')">
+                            {{ 'FORM-PAGO.siguiente' | translate }} <ion-icon *ngIf="formDirHabit['valid']"
+                                name="arrow-down" class="iconSiguiente">
+                            </ion-icon>
+                        </ion-button>
+                    </div>
+                </ion-grid>
+            </div>
+        </div>
+    </form>
+
+
+
+    <div id="upgrades" *ngIf="pasos[2]==true">
+        <ion-button class="seccion" [ngStyle]="{'background':COLOR_MENU_BACKEND}"
+            (click)="funHiddenDivUpgrades('upgrades')" expand="block" fill="clear">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="1">
+                        <ion-icon *ngIf="this.arrUpgradesAplicados.length > 0" color="success" name="checkmark"
+                            class="iconValidForm">
+                        </ion-icon>
+                    </ion-col>
+
+                    <ion-col size="10">
+                        {{ 'FORM-PAGO.upgrades' | translate }}
+                    </ion-col>
+
+                    <ion-col size="1">
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="upgrades == false">
+                        </ion-icon>
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="upgrades == true">
+                        </ion-icon>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-button>
+
+        <div *ngIf="upgrades">
+            <div id="upgrades">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="12">
+
+                            <ion-grid *ngIf="dataUpgrades" class="divUpgrades"
+                                [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                                <ion-row *ngIf="dataUpgrades[0].message">
+                                    <ion-col size="12">
+                                        {{ 'FORM-PAGO.no_coverturas' | translate }}
+                                    </ion-col>
+                                </ion-row>
+
+                                <div *ngIf="dataUpgrades.length > 0 && !dataUpgrades[0].message"
+                                    [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+
+                                    <div class="itemUpgrade" [ngStyle]="{'border-color':COLOR_MENU_BACKEND}"
+                                        *ngIf="arrUpgradesAplicados.length > 1">
+                                        <ion-grid>
+                                            <ion-row>
+                                                <ion-col size="8" class="align-items-center textElimTodosUpgr">
+                                                    <b [ngStyle]="{'color':COLOR_MENU_BACKEND}">
+                                                        {{ 'FORM-PAGO.eliminar_upgrades' | translate }}
+                                                    </b>
+                                                </ion-col>
+
+                                                <ion-col size="2" class="textElimTodosUpgr">
+                                                    <ion-icon name="arrow-forward" color="dark"></ion-icon>
+                                                </ion-col>
+
+                                                <ion-col size="2" class="align-items-center">
+                                                    <ion-button (click)="eliminarTodosUpgrades()" color="danger"
+                                                        size="small">
+                                                        <ion-icon name="trash" [ngStyle]="{'font-color':'white'}">
+                                                        </ion-icon>
+                                                    </ion-button>
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-grid>
+                                    </div>
+
+                                    <ion-item *ngFor="let upgrade of dataUpgrades; let i = index">
+
+                                        <ion-grid class="itemUpgrade" [ngStyle]="{'border-color':COLOR_MENU_BACKEND}">
+                                            <ion-row>
+                                                <ion-col size="12">
+                                                    <div *ngIf="upgrade.type_raider == 1" class="divUpgradesText">
+                                                        <ion-icon *ngIf="upgrade.activo" class="iconUpgrade"
+                                                            name="checkmark-circle" slot="start">
+                                                        </ion-icon>&nbsp;
+                                                        <ion-text class="textRaider">
+                                                            <b class="bRaider">
+                                                                {{ (upgrade.value_raider | TasaCambioPipe :dataPlan.tasa_cambio | number:'1.2-2') + ' ' + dataPlan.moneda }}
+                                                            </b>
+                                                        </ion-text>
+                                                        &nbsp;&nbsp;
+                                                        <ion-button *ngIf="!upgrade.activo" slot="end" fill="outline"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                                                            class="btnAgregarUpgrade"
+                                                            (click)="validaUpgrade(upgrade,i)">
+                                                            {{ 'FORM-PAGO.agregar' | translate }} &nbsp;
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="add">
+                                                            </ion-icon>
+                                                        </ion-button>
+                                                        <ion-button
+                                                            *ngIf="upgrade.activo && (upgrade.rd_calc_type == 2 || upgrade.rd_calc_type == 5)"
+                                                            slot="end" fill="outline"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                                                            class="btnAgregarUpgrade"
+                                                            (click)="validaUpgrade(upgrade,i)">
+                                                            {{ 'FORM-PAGO.editar' | translate }} &nbsp;
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="create">
+                                                            </ion-icon>
+                                                        </ion-button>
+                                                        <ion-button
+                                                            *ngIf="upgrade.activo && upgrade.rd_calc_type != 2 && upgrade.rd_calc_type != 5"
+                                                            slot="end" fill="outline"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                                                            class="btnAgregarUpgrade"
+                                                            (click)="validaUpgrade(upgrade,i)">
+                                                            {{ 'FORM-PAGO.eliminar' | translate }} &nbsp;
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="trash">
+                                                            </ion-icon>
+                                                        </ion-button>
+                                                    </div>
+
+                                                    <div *ngIf="upgrade.type_raider == 2" class="divUpgradesText">
+                                                        <ion-icon *ngIf="upgrade.activo" class="iconUpgrade"
+                                                            name="checkmark-circle" slot="start">
+                                                        </ion-icon>&nbsp;
+                                                        <ion-text class="textRaider">
+                                                            <b class="bRaider">
+                                                                {{ upgrade.value_raider | TasaCambioPipe }} %
+                                                            </b>
+                                                        </ion-text>&nbsp;&nbsp;
+                                                        <ion-button *ngIf="!upgrade.activo" slot="end" fill="outline"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                                                            class="btnAgregarUpgrade"
+                                                            (click)="validaUpgrade(upgrade,i)">
+                                                            {{ 'FORM-PAGO.agregar' | translate }} &nbsp;
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="add">
+                                                            </ion-icon>
+                                                        </ion-button>
+                                                        <ion-button
+                                                            *ngIf="upgrade.activo && (upgrade.rd_calc_type == 2 || upgrade.rd_calc_type == 5)"
+                                                            slot="end" fill="outline"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                                                            class="btnAgregarUpgrade"
+                                                            (click)="validaUpgrade(upgrade,i)">
+                                                            {{ 'FORM-PAGO.editar' | translate }} &nbsp;
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="create">
+                                                            </ion-icon>
+                                                        </ion-button>
+                                                        <ion-button
+                                                            *ngIf="upgrade.activo && upgrade.rd_calc_type != 2 && upgrade.rd_calc_type != 5"
+                                                            slot="end" fill="outline"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}"
+                                                            class="btnAgregarUpgrade"
+                                                            (click)="validaUpgrade(upgrade,i)">
+                                                            {{ 'FORM-PAGO.eliminar' | translate }} &nbsp;
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="trash">
+                                                            </ion-icon>
+                                                        </ion-button>
+                                                    </div>
+                                                </ion-col>
+                                            </ion-row>
+
+                                            <ion-row>
+                                                <ion-col size="12">
+                                                    <div class="divUpgradesText">
+                                                        {{ upgrade.name_raider }}
+                                                    </div>
+                                                </ion-col>
+                                            </ion-row>
+
+                                            <ion-row>
+                                                <ion-col size="12">
+                                                    <div *ngIf="upgrade.rd_calc_type == 1" class="divUpgradesText">
+                                                        <b>{{ 'FORM-PAGO.comprobante' | translate }}</b>
+                                                        <ion-button slot="end" fill="clear"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="btnInfo"
+                                                            (click)="descripcionUpgrade(upgrade)">
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': color_menu_barra_hover}"
+                                                                name="information-circle">
+                                                            </ion-icon>
+                                                        </ion-button><br> <br>
+                                                    </div>
+                                                    <div *ngIf="upgrade.rd_calc_type == 2" class="divUpgradesText">
+                                                        <b>{{ 'FORM-PAGO.pasaje_especif' | translate }}</b>
+                                                        <ion-button slot="end" fill="clear"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="btnInfo"
+                                                            (click)="descripcionUpgrade(upgrade)">
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': color_menu_barra_hover}"
+                                                                name="information-circle">
+                                                            </ion-icon>
+                                                        </ion-button> <br> <br>
+                                                    </div>
+                                                    <div *ngIf="upgrade.rd_calc_type == 3" class="divUpgradesText">
+                                                        <b>{{ 'FORM-PAGO.pasaje_general' | translate }}</b>
+                                                        <ion-button slot="end" fill="clear"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="btnInfo"
+                                                            (click)="descripcionUpgrade(upgrade)">
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': color_menu_barra_hover}"
+                                                                name="information-circle">
+                                                            </ion-icon>
+                                                        </ion-button><br> <br>
+                                                    </div>
+                                                    <div *ngIf="upgrade.rd_calc_type == 4" class="divUpgradesText">
+                                                        <b>{{ 'FORM-PAGO.por_dia_por_coucher' | translate }}</b>
+                                                        <ion-button slot="end" fill="clear"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="btnInfo"
+                                                            (click)="descripcionUpgrade(upgrade)">
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': color_menu_barra_hover}"
+                                                                name="information-circle">
+                                                            </ion-icon>
+                                                        </ion-button><br> <br>
+                                                    </div>
+                                                    <div *ngIf="upgrade.rd_calc_type == 5" class="divUpgradesText">
+                                                        <b>{{ 'FORM-PAGO.por_dia_por_pasaje' | translate }}</b>
+                                                        <ion-button slot="end" fill="clear"
+                                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="btnInfo"
+                                                            (click)="descripcionUpgrade(upgrade)">
+                                                            <ion-icon class="iconVerBenef"
+                                                                [ngStyle]="{'color': color_menu_barra_hover}"
+                                                                name="information-circle">
+                                                            </ion-icon>
+                                                        </ion-button><br> <br>
+                                                    </div>
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-grid>
+                                    </ion-item>
+                                </div>
+
+                            </ion-grid>
+                        </ion-col>
+                    </ion-row>
+
+                </ion-grid>
+            </div>
+            <ion-button class="btnSiguiente" [ngStyle]="{'background': color_menu_barra_hover}" expand="block"
+                fill="clear" (click)="pasoSiguiente(3, 'cupones')">
+                {{ 'FORM-PAGO.siguiente' | translate }} <ion-icon name="arrow-down" class="iconSiguiente"></ion-icon>
+            </ion-button>
+        </div>
+    </div>
+
+    <div *ngIf="pasos[3]==true" id="cupones">
+        <ion-button class="seccion" [ngStyle]="{'background':COLOR_MENU_BACKEND}" (click)="funHiddenDivCupon('cupones')"
+            expand="block" fill="clear">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="1">
+                        <ion-icon *ngIf="cuponActivo" color="success" name="checkmark" class="iconValidForm"></ion-icon>
+                    </ion-col>
+
+                    <ion-col size="10">
+                        {{ 'FORM-PAGO.descuentos' | translate }}
+                    </ion-col>
+
+                    <ion-col size="1">
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="cupones == false">
+                        </ion-icon>
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="cupones == true">
+                        </ion-icon>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-button>
+
+        <div *ngIf="cupones">
+            <form [formGroup]="codigoCupon">
+                <div id="cupones">
+                    <ion-grid>
+                        <ion-row>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                        {{ 'FORM-PAGO.text_cupon_nc' | translate }}
+                                    </ion-label>
+                                    <ion-input [readonly]="cuponActivo" inputmode="text" type="text"
+                                        formControlName="codigo" [(ngModel)]="textDescApi"></ion-input>
+                                </ion-item>
+                                <ion-text *ngIf="cuponActivo">
+                                    <ion-grid>
+                                        <ion-row
+                                            *ngIf="dataCupon['CUPON'] && dataCupon['CUPON']['STATUS'] == 'OK' && dataCupon['CUPON']['ID_CUPON']">
+                                            <ion-col size="6">
+                                                <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                                                    {{ 'FORM-PAGO.valor_cupon' | translate }}
+                                                </b>
+                                            </ion-col>
+
+                                            <ion-col size="6">
+                                                <b *ngIf="dataCupon['CUPON'].TIPO_CALC == '%'">
+                                                    {{ dataCupon['CUPON'].VALUE_CUPON | TasaCambioPipe }}
+                                                    %
+                                                </b>
+                                                <b *ngIf="dataCupon['CUPON'].TIPO_CALC != '%'">
+                                                    {{ dataCupon['CUPON'].VALUE_CUPON | TasaCambioPipe :dataPlan.tasa_cambio | number:'1.2-2' }}
+                                                    {{ this.dataPlan.moneda }}
+                                                </b>
+                                            </ion-col>
+                                        </ion-row>
+
+                                        <ion-row
+                                            *ngIf="dataCupon['NC'] && dataCupon['NC']['STATUS'] == 'OK' && dataCupon['NC']['ID_NC']">
+                                            <ion-col size="6">
+                                                <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                                                    {{ 'FORM-PAGO.valor_nc' | translate }}
+                                                </b>
+                                            </ion-col>
+
+                                            <ion-col size="6">
+                                                <b *ngIf="dataCupon['NC'].TIPO_CALC == '%'">
+                                                    {{ dataCupon['NC'].VALUE_CUPON | TasaCambioPipe }}
+                                                    %
+                                                </b>
+                                                <b *ngIf="dataCupon['NC'].TIPO_CALC != '%'">
+                                                    {{ dataCupon['NC'].VALUE_CUPON | TasaCambioPipe :dataPlan.tasa_cambio | number : '1.2-2' }}
+                                                    {{ this.dataPlan.moneda }}
+                                                </b>
+                                            </ion-col>
+                                        </ion-row>
+
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                                                    {{ 'FORM-PAGO.descuento_aplicado' | translate }}
+                                                </b>
+                                            </ion-col>
+
+                                            <ion-col size="6">
+                                                <b>
+                                                    {{ descAPlic | TasaCambioPipe :dataPlan.tasa_cambio | number : '1.2-2' }}
+                                                    {{ this.dataPlan.moneda }}
+                                                </b>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+                                </ion-text>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row *ngIf="!cuponActivo">
+                            <ion-col size="12">
+                                <ion-button class="btnSiguiente" color="success" expand="block"
+                                    [disabled]="!codigoCupon['valid'] || cuponActivo" (click)="validaCupon()">
+                                    {{ 'FORM-PAGO.aplicar_descuento' | translate }}
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row *ngIf="cuponActivo">
+                            <ion-col size="10">
+                                <ion-button class="btnSiguiente" color="success" expand="block"
+                                    [disabled]="!codigoCupon['valid'] || cuponActivo" (click)="validaCupon()">
+                                    <ion-icon name="checkmark-circle"></ion-icon> &nbsp;
+                                    {{ 'FORM-PAGO.cupon_aplicado' | translate }}
+                                </ion-button>
+                            </ion-col>
+                            <ion-col size="2">
+                                <ion-button class="btnSiguiente" color="danger" expand="block"
+                                    (click)="eliminarCupon()">
+                                    <ion-icon name="trash"></ion-icon>
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+
+                    </ion-grid>
+                </div>
+            </form>
+            <ion-button class="btnSiguiente" [ngStyle]="{'background': color_menu_barra_hover}" expand="block"
+                fill="clear" (click)="pasoSiguiente(4, 'pago')">
+                {{ 'FORM-PAGO.siguiente' | translate }} <ion-icon name="arrow-down" class="iconSiguiente"></ion-icon>
+            </ion-button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div *ngIf="pasos[4]==true" id="pago">
+        <ion-button class="seccion" [ngStyle]="{'background': COLOR_MENU_BACKEND }" (click)="funHiddenDivPago('pago')"
+            expand="block" fill="clear">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="1">
+                        <ion-icon *ngIf="formPagoTDC['valid'] || (dataCupon && dataCupon.PAGO_CUPON == 'Si')"
+                            color="success" name="checkmark" class="iconValidForm">
+                        </ion-icon>
+                    </ion-col>
+
+                    <ion-col size="10">
+                        {{ 'FORM-PAGO.pago' | translate }}
+                    </ion-col>
+
+                    <ion-col size="1">
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-down" *ngIf="pago == false">
+                        </ion-icon>
+                        <ion-icon [ngStyle]="{'color': 'white'}" name="caret-up" *ngIf="pago == true">
+                        </ion-icon>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-button>
+
+        <div *ngIf="pago">
+
+            <form [formGroup]="formReferencia" *ngIf="dataMethodPago.REFERENCIA_QUOTE == 1">
+                <div>
+                    <ion-grid>
+                        <ion-row>
+                            <ion-col size=12>
+                                <ion-item>
+                                    <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                        {{ 'FORM-PAGO.n_referencia' | translate }}
+                                    </ion-label>
+                                    <ion-input maxlength="60" inputmode="text" type="text" formControlName="referencia"
+                                        placeholder="{{ 'FORM-PAGO.n_referencia' | translate }}"></ion-input>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </div>
+            </form>
+
+            <div class="procesoPago" id="procesoPago" *ngIf="!dataCupon || dataCupon.PAGO_CUPON !='Si'">
+
+                <div class="divMediosDePago">
+
+                    <ion-item>
+                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                            <b>{{ 'FORM-PAGO.selec_metod_pago' | translate }}</b>
+                        </ion-label>
+                        <ion-select cancelText="{{ 'GRAFICAS.atras' | translate }}"
+                            okText="{{ 'GRAFICAS.siguiente' | translate }}" interface="popover"
+                            [(ngModel)]="typeMethodPago" (ionChange)="funSeltipoPago(typeMethodPago)">
+                            <ion-select-option
+                                *ngIf="(dataMethodPago.PAY_CREDIT_CARD == 1 && dataCreditoAgencia != null && (dataCreditoAgencia.forma_pago == 1 || dataCreditoAgencia.forma_pago == 2 )) || (dataCreditoAgencia == null && dataMethodPago.PAY_CREDIT_CARD == 1)"
+                                value="PAY_CREDIT_CARD">{{ 'FORM-PAGO.tdc' | translate }}</ion-select-option>
+                            <ion-select-option
+                                *ngIf="dataMethodPago.USE_PAYPAL == 1  && this.dataMethodPago.CREDENTIAL_PAYPAL != null"
+                                value="USE_PAYPAL">{{ 'FORM-PAGO.paypal' | translate }}</ion-select-option>
+                            <ion-select-option
+                                *ngIf="(pagoCreditoAgencia && dataCreditoAgencia!=null && (dataCreditoAgencia.forma_pago == 1 || dataCreditoAgencia.forma_pago == 3)) || (dataCreditoAgencia == null && pagoCreditoAgencia)"
+                                value="CREDIT_AGENCY">{{ 'FORM-PAGO.pago_credito_disp' | translate }}
+                            </ion-select-option>
+                            <ion-select-option
+                                *ngIf="(userType == 2 && dataMethodPago.SHIPPING_LINK == 1) || (userType == 5 && dataMethodPago.SHIPPING_LINK == 1) "
+                                value="SHIPPING_LINK"> {{ 'FORM-PAGO.enviar_link_de_pago' | translate }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <div *ngIf="typeMethodPago == null">
+                        <br><br>
+                    </div>
+                </div>
+
+
+                <form [formGroup]="formPagoTDC"
+                    *ngIf="typeMethodPago == 'PAY_CREDIT_CARD' && ((dataMethodPago.PAY_CREDIT_CARD == 1 && dataCreditoAgencia!=null && (dataCreditoAgencia.forma_pago == 1 || dataCreditoAgencia.forma_pago == 2)) || (dataCreditoAgencia == null && dataMethodPago.PAY_CREDIT_CARD == 1))">
+                    <div id="PAY_CREDIT_CARD">
+                        <div class="divImg">
+                            <div class="divImgTDC">
+                                <ion-grid>
+                                    <ion-row>
+                                        <ion-col size="4">
+                                        </ion-col>
+
+                                        <ion-col size="4" class="colImgTDC">
+                                            <img [src]="imgTDC" clas="imgTDC">
+                                        </ion-col>
+
+                                        <ion-col size="4">
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                            </div>
+                        </div>
+                        <ion-grid>
+                            <ion-row id="codigoTarjeta">
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['codigoTarjeta'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.num_tdc' | translate }}
+                                        </ion-label>
+                                        <ion-input (ionChange)="funFormatCreditCard($event)" inputmode="numeric"
+                                            type="text" maxlength="19" name="codigoTarjeta"
+                                            formControlName="codigoTarjeta" placeholder="**** **** **** ****">
+                                            <ion-icon name="card" [ngStyle]="{'color': color_menu_barra_hover}"
+                                                class="iconCardTDC"></ion-icon>
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row id="nombreTarjeta apellidoTarjeta">
+                                <ion-col size="6">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['nombreTarjeta'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.nombre_tdc' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="30" inputmode="text" type="text"
+                                            formControlName="nombreTarjeta"
+                                            placeholder="{{ 'FORM-PAGO.nombre' | translate }}"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="6">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['apellidoTarjeta'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.apellido_tdc' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="30" inputmode="text" type="text"
+                                            formControlName="apellidoTarjeta"
+                                            placeholder="{{ 'FORM-PAGO.apellido' | translate }}"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="8" id="tipoTarjeta">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['tipoTarjeta'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.tipo_tarjeta' | translate }}
+                                        </ion-label>
+                                        <ion-input inputmode="numeric" type="text" formControlName="tipoTarjeta"
+                                            readonly>
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="4" id="CCV">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['CCV'].valid == false" name="alert"
+                                                color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.ccv' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="4" inputmode="numeric" type="text" formControlName="CCV"
+                                            placeholder="{{ 'FORM-PAGO.ccv' | translate }}">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <div>
+                                        <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                                            {{ 'FORM-PAGO.fecha_expiracion' | translate }}
+                                        </b>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="6" id="mesTarjetaVen">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['mesTarjetaVen'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            MM
+                                        </ion-label>
+                                        <ion-datetime
+                                            monthNames="{{ 'MESES.01' | translate }}, {{ 'MESES.02' | translate }}, {{ 'MESES.03' | translate }}, {{ 'MESES.04' | translate }}, {{ 'MESES.05' | translate }}, {{ 'MESES.06' | translate }}, {{ 'MESES.07' | translate }}, {{ 'MESES.08' | translate }}, {{ 'MESES.09' | translate }}, {{ 'MESES.10' | translate }}, {{ 'MESES.11' | translate }}, {{ 'MESES.12' | translate }}"
+                                            cancelText="{{ 'GRAFICAS.atras' | translate }}"
+                                            doneText="{{ 'GRAFICAS.siguiente' | translate }}" displayFormat="MM"
+                                            pickerFormat="MM" formControlName="mesTarjetaVen"
+                                            value="{{ formPagoTDC['value'].mesTarjetaVen }}">
+                                        </ion-datetime>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="6" id="yearTarjetaVen">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['yearTarjetaVen'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            AAAA
+                                        </ion-label>
+                                        <ion-datetime
+                                            monthNames="{{ 'MESES.01' | translate }}, {{ 'MESES.02' | translate }}, {{ 'MESES.03' | translate }}, {{ 'MESES.04' | translate }}, {{ 'MESES.05' | translate }}, {{ 'MESES.06' | translate }}, {{ 'MESES.07' | translate }}, {{ 'MESES.08' | translate }}, {{ 'MESES.09' | translate }}, {{ 'MESES.10' | translate }}, {{ 'MESES.11' | translate }}, {{ 'MESES.12' | translate }}"
+                                            cancelText="{{ 'GRAFICAS.atras' | translate }}"
+                                            doneText="{{ 'GRAFICAS.siguiente' | translate }}" displayFormat="YYYY"
+                                            pickerFormat="YYYY" formControlName="yearTarjetaVen" min="{{ yearActual }}"
+                                            max="{{ (yearActual + 30) }}"
+                                            value="{{ this.formPagoTDC['controls'].yearTarjetaVen }}">
+                                        </ion-datetime>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row *ngIf="dataMethodPago.PAYMENT_MANAGER_MESSAGE == '1'">
+                                <ion-col size="12" class="classPaymentIlsols">
+                                    <b [ngStyle]="{'color': color_menu_barra_hover}">
+                                        <ion-icon [ngStyle]="{'color': color_menu_barra_hover}"
+                                            name="alert-circle-outline"></ion-icon>
+                                        {{ 'FORM-PAGO.cargos_bajo_ils' | translate }}
+                                    </b>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="4">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['tipoDocumentTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.tipo_documento' | translate }}
+                                        </ion-label>
+                                        <ion-select formControlName="tipoDocumentTDC"
+                                            okText="{{ 'FORM-PAGO.siguiente' | translate }}"
+                                            cancelText="{{ 'FORM-PAGO.cancelar' | translate }}">
+                                            <ion-select-option value="CC">CC</ion-select-option>
+                                            <ion-select-option value="CE">CE</ion-select-option>
+                                            <ion-select-option value="PPN">PPN</ion-select-option>
+                                            <ion-select-option value="SSN">SSN</ion-select-option>
+                                            <ion-select-option value="LIC">LIC</ion-select-option>
+                                            <ion-select-option value="NIT">NIT</ion-select-option>
+                                            <ion-select-option value="TI">TI</ion-select-option>
+                                            <ion-select-option value="DNI">DNI</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="8">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['nDocumentTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.n_documento' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="30" inputmode="text" type="text"
+                                            formControlName="nDocumentTDC"
+                                            placeholder="{{ 'FORM-PAGO.n_documento' | translate }}">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['correoTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.correo' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="50" inputmode="email" type="email"
+                                            formControlName="correoTDC"
+                                            placeholder="{{ 'FORM-PAGO.correo' | translate }}">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['paisTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.pais' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}"
+                                            formControlName="paisTDC" (ionChange)="funStates()">
+                                            <ion-select-option *ngFor="let pais of paises" value="{{pais.iso_country}}">
+                                                {{ pais.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="6">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['estadoTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.estado' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}" [disabled]="!statesTDC"
+                                            formControlName="estadoTDC" (ionChange)="funCities()">
+                                            <ion-select-option *ngFor="let estado of statesTDC"
+                                                value="{{estado.iso_state}}">
+                                                {{ estado.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="6">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['ciudadTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.ciudad' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}" [disabled]="!citiesTDC"
+                                            formControlName="ciudadTDC">
+                                            <ion-select-option *ngFor="let ciudad of citiesTDC"
+                                                value="{{ciudad.iso_city}}">
+                                                {{ ciudad.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="4">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['prefTelTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.codigo' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}"
+                                            formControlName="prefTelTDC">
+                                            <ion-select-option *ngFor="let codPhone of codigosPhones"
+                                                value="{{codPhone.cod_phone}}">
+                                                {{codPhone.cod_phone}} {{codPhone.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="8">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formPagoTDC['controls']['telefTDC'].valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.telefono' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="50" inputmode="tel" type="tel" formControlName="telefTDC"
+                                            placeholder="{{ 'FORM-PAGO.telefono' | translate }}">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="1">
+                                    <ion-checkbox formControlName="termCond" checked="false" color="dark">
+                                    </ion-checkbox>
+                                </ion-col>
+
+                                <ion-col size="11">
+                                    <div class="divTermCon">
+                                        {{ 'FORM-PAGO.term_cond_1' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.COND_GEN"
+                                            (click)="verPDFApp(1, dataTermCond.COND_GEN, 'COND_GEN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.COND_GEN">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_3' | translate }}<a
+                                            *ngIf="dataTermCond && dataTermCond.POL_PRIV"
+                                            (click)="verPDFApp(2, dataTermCond.POL_PRIV, 'POL_PRIV_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_PRIV">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_5' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.POL_REN"
+                                            (click)="verPDFApp(3, dataTermCond.POL_REN, 'POL_REN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_REN">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-button class="btnSiguiente" color="success" expand="block"
+                                        [disabled]="!formPagoTDC['valid'] || !users.valid || !contacto['valid'] || !((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                        (click)="pagoOrden()">
+                                        {{ 'FORM-PAGO.comprar' | translate }} &nbsp;
+                                        <ion-icon
+                                            *ngIf="formPagoTDC['valid'] && users.valid && contacto['valid'] && ((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                            name="wallet">
+                                        </ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
+                </form>
+
+
+
+                <form [formGroup]="formPagoPaypal"
+                    *ngIf="typeMethodPago == 'USE_PAYPAL' && this.dataMethodPago.CREDENTIAL_PAYPAL != null">
+                    <div id="USE_PAYPAL">
+
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="3">
+
+                                </ion-col>
+
+                                <ion-col size="6">
+                                    <img src="../../assets/icon/paypal.png">
+                                </ion-col>
+
+                                <ion-col size="3">
+
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row *ngIf="dataMethodPago.PAYMENT_MANAGER_MESSAGE == '1'">
+                                <ion-col size="12" class="classPaymentIlsols">
+                                    <b [ngStyle]="{'color': color_menu_barra_hover}">
+                                        <ion-icon [ngStyle]="{'color': color_menu_barra_hover}"
+                                            name="alert-circle-outline"></ion-icon>
+                                        {{ 'FORM-PAGO.cargos_bajo_ils' | translate }}
+                                    </b>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="1">
+                                    <ion-checkbox formControlName="termCond" checked="false" color="dark">
+                                    </ion-checkbox>
+                                </ion-col>
+
+                                <ion-col size="11">
+                                    <div class="divTermCon">
+                                        {{ 'FORM-PAGO.term_cond_1' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.COND_GEN"
+                                            (click)="verPDFApp(1, dataTermCond.COND_GEN, 'COND_GEN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.COND_GEN">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_3' | translate }}<a
+                                            *ngIf="dataTermCond && dataTermCond.POL_PRIV"
+                                            (click)="verPDFApp(2, dataTermCond.POL_PRIV, 'POL_PRIV_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_PRIV">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_5' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.POL_REN"
+                                            (click)="verPDFApp(3, dataTermCond.POL_REN, 'POL_REN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_REN">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+
+                            <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+                            <ion-row *ngIf="!payPalConfig">
+                                <ion-col size="12">
+                                    <ion-button class="btnSiguiente" color="success" expand="block"
+                                        [disabled]="!formPagoPaypal['valid'] || !(users.valid && contacto['valid']) || !((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                        (click)="pagoOrden(true)">
+                                        {{ 'FORM-PAGO.comprar' | translate }} &nbsp;
+                                        <ion-icon
+                                            *ngIf="formPagoPaypal['valid'] && users.valid && contacto['valid'] && ((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                            name="wallet">
+                                        </ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
+                </form>
+
+
+
+                <form [formGroup]="formCreditAgency"
+                    *ngIf="typeMethodPago == 'CREDIT_AGENCY' && ((pagoCreditoAgencia && dataCreditoAgencia!=null && (dataCreditoAgencia.forma_pago == 1 || dataCreditoAgencia.forma_pago == 3)) || (dataCreditoAgencia == null && pagoCreditoAgencia))">
+                    <div id="CREDIT_AGENCY">
+
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="3">
+
+                                </ion-col>
+
+                                <ion-col size="6">
+                                    <img class="imgLogo" [src]="logo">
+                                </ion-col>
+
+                                <ion-col size="3">
+
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12" class="alignMontoCreditAgency">
+                                    <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                                        {{ 'FORM-PAGO.agencia' | translate }}
+                                    </b>{{ dataCreditoAgencia.broker }}
+                                </ion-col>
+
+                                <ion-col size="12" class="alignMontoCreditAgency">
+                                    {{ 'FORM-PAGO.credito_disponible' | translate }}
+                                    <ion-text [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                                        {{ dataCreditoAgencia.credito_actual | TasaCambioPipe :dataPlan.tasa_cambio | number : '1.2-2' }}
+                                    </ion-text>
+                                </ion-col>
+                            </ion-row><br><br>
+
+                            <ion-row>
+                                <ion-col size="1">
+                                    <ion-checkbox formControlName="termCond" checked="false" color="dark">
+                                    </ion-checkbox>
+                                </ion-col>
+
+                                <ion-col size="11">
+                                    <div class="divTermCon">
+                                        {{ 'FORM-PAGO.term_cond_1' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.COND_GEN"
+                                            (click)="verPDFApp(1, dataTermCond.COND_GEN, 'COND_GEN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.COND_GEN">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_3' | translate }}<a
+                                            *ngIf="dataTermCond && dataTermCond.POL_PRIV"
+                                            (click)="verPDFApp(2, dataTermCond.POL_PRIV, 'POL_PRIV_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_PRIV">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_5' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.POL_REN"
+                                            (click)="verPDFApp(3, dataTermCond.POL_REN, 'POL_REN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_REN">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-button class="btnSiguiente" color="success" expand="block"
+                                        [disabled]="!formCreditAgency['valid'] || !(users.valid && contacto['valid']) || !((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                        (click)="pagoOrden()">
+                                        {{ 'FORM-PAGO.comprar' | translate }} &nbsp;
+                                        <ion-icon
+                                            *ngIf="formCreditAgency['valid'] && users.valid && contacto['valid'] && ((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                            name="wallet">
+                                        </ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
+                </form>
+
+
+
+                <form [formGroup]="formLinkPago" *ngIf="typeMethodPago == 'SHIPPING_LINK' ">
+                    <div id="SHIPPING_LINK">
+
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formLinkPago['controls'].correoLinkPago.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.correo_pasajero' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="50" inputmode="email" type="email"
+                                            formControlName="correoLinkPago">
+                                        </ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="5">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formLinkPago['controls'].codigoTelLinkPago.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.codigo' | translate }}
+                                        </ion-label>
+                                        <ion-select okText="{{ 'COTIZADOR.aceptar' | translate }}"
+                                            cancelText="{{ 'COTIZADOR.cancelar' | translate }}"
+                                            formControlName="codigoTelLinkPago"
+                                            value="{{ formLinkPago['controls'].codigoTelLinkPago.value }}">
+                                            <ion-select-option *ngFor="let codPhone of codigosPhones"
+                                                value="{{ codPhone.cod_phone }}">
+                                                {{codPhone.cod_phone}} {{codPhone.description }}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </ion-col>
+
+                                <ion-col size="7">
+                                    <ion-item>
+                                        <ion-label [ngStyle]="{'color': COLOR_MENU_BACKEND}" position="floating">
+                                            <ion-icon *ngIf="formLinkPago['controls'].telefLinkPago.valid == false"
+                                                name="alert" color="danger" class="iconFalseInput"></ion-icon>
+                                            {{ 'FORM-PAGO.telefono' | translate }}
+                                        </ion-label>
+                                        <ion-input maxlength="15" inputmode="tel" type="tel"
+                                            formControlName="telefLinkPago"
+                                            value="{{ formLinkPago['controls'].telefLinkPago.value }}"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="1">
+                                    <ion-checkbox formControlName="termCond" checked="false" color="dark">
+                                    </ion-checkbox>
+                                </ion-col>
+
+                                <ion-col size="11">
+                                    <div class="divTermCon">
+                                        {{ 'FORM-PAGO.term_cond_1' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.COND_GEN"
+                                            (click)="verPDFApp(1, dataTermCond.COND_GEN, 'COND_GEN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.COND_GEN">
+                                            {{ 'FORM-PAGO.term_cond_2' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_3' | translate }}<a
+                                            *ngIf="dataTermCond && dataTermCond.POL_PRIV"
+                                            (click)="verPDFApp(2, dataTermCond.POL_PRIV, 'POL_PRIV_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_PRIV">
+                                            {{ 'FORM-PAGO.term_cond_4' | translate }}</a>
+                                        {{ 'FORM-PAGO.term_cond_5' | translate }}
+                                        <a *ngIf="dataTermCond && dataTermCond.POL_REN"
+                                            (click)="verPDFApp(3, dataTermCond.POL_REN, 'POL_REN_')"
+                                            [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="aTermCond">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                        <a *ngIf="dataTermCond && !dataTermCond.POL_REN">
+                                            {{ 'FORM-PAGO.term_cond_6' | translate }}</a>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ion-button class="btnSiguiente" color="success" expand="block"
+                                        [disabled]="!(formLinkPago['valid'] && (formLinkPago['controls'].telefLinkPago.value != '' || formLinkPago['controls'].correoLinkPago.value != '')) || !(users.valid && contacto['valid']) || !((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                        (click)="pagoOrden()">
+                                        {{ 'FORM-PAGO.comprar' | translate }} &nbsp;
+                                        <ion-icon
+                                            *ngIf="formLinkPago['valid'] && (formLinkPago['controls'].telefLinkPago.value || formLinkPago['controls'].correoLinkPago.value ) && users.valid && contacto['valid'] && ((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                            name="wallet">
+                                        </ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
+                </form>
+            </div>
+
+            <div *ngIf="dataCupon && dataCupon.PAGO_CUPON == 'Si'">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-button class="btnSiguiente" color="success" expand="block"
+                                [disabled]="!users.valid || !contacto['valid'] || !((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                (click)="pagoOrden()">
+                                {{ 'FORM-PAGO.comprar' | translate }} &nbsp;
+                                <ion-icon
+                                    *ngIf="users.valid && contacto['valid'] && ((dataPlan['dir_habit'] == 'Y') ? formDirHabit['valid'] : true)"
+                                    name="wallet">
+                                </ion-icon>
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="precios">
+        <ion-item>
+
+            <ion-grid class="divPrecios">
+                <ion-row>
+                    <ion-col size="12" class="tituloPlan">
+                        <b>{{ 'FORM-PAGO.plan' | translate }} </b>
+                        <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                            {{ dataPlan.name_plan }}
+                        </b>
+                    </ion-col>
+                </ion-row>
+
+                <div *ngIf="recargEdad == false">
+                    <div
+                        *ngIf="dataPlan.valorMenor && dataPlan.valorMenor > 0 && dataPlan.subTotalMenores && dataPlan.subTotalMenores > 0">
+                        <ion-row>
+                            <ion-col size="6">
+                                <b>
+                                    ({{ dataPlan.min_age }} - {{ dataPlan.normal_age }})
+                                    {{ 'FORM-PAGO.years' | translate }}
+                                </b>
+                            </ion-col>
+
+                            <ion-col size="6">
+                                {{ dataPlan.subTotalMenores | TasaCambioPipe | number : '1.2-2' }} {{ dataPlan.moneda }}
+                            </ion-col>
+                        </ion-row>
+                    </div>
+
+                    <div
+                        *ngIf="dataPlan.valorMayor && dataPlan.valorMayor > 0 && dataPlan.subTotalMayor && dataPlan.subTotalMayor > 0">
+                        <ion-row>
+                            <ion-col size="6">
+                                <b>
+                                    <ion-icon name="alert" color="warning"></ion-icon>
+                                    ({{ (dataPlan.normal_age + 1) }} - {{ dataPlan.max_age }})
+                                    {{ 'FORM-PAGO.years' | translate }}
+                                </b>
+                            </ion-col>
+
+                            <ion-col size="6">
+                                {{ dataPlan.subTotalMayor | TasaCambioPipe | number : '1.2-2' }} {{ dataPlan.moneda }}
+                            </ion-col>
+                        </ion-row>
+                    </div>
+                </div>
+
+                <ion-row *ngIf="dataPlan.planpareja && dataPlan.planpareja == 1">
+                    <ion-col size="6">
+                        <b>{{ 'GET-PLANS.plan_pareja' | translate }} </b>
+                    </ion-col>
+
+                    <ion-col size="6">
+                        <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="checkmark" class="iconoFactor">
+                        </ion-icon>
+                    </ion-col>
+                </ion-row>
+
+
+                <ion-row *ngIf="dataPlan.planfamiliar && dataPlan.planfamiliar == 1">
+                    <ion-col size="6">
+                        <b>{{ 'GET-PLANS.plan_familiar' | translate }} </b>
+                    </ion-col>
+
+                    <ion-col size="6">
+                        <ion-icon [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="checkmark" class="iconoFactor">
+                        </ion-icon>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col size="6">
+                        <b>{{ 'FORM-PAGO.subTotal' | translate }}</b>
+                    </ion-col>
+
+                    <ion-col size="6" class="colVerInfoBenef">
+                        {{ dataPlan.USDTotal | TasaCambioPipe :dataPlan.tasa_cambio | number : '1.2-2' }}
+                        {{ this.dataPlan.moneda }}
+                        <ion-button fill="clear" [ngStyle]="{'color': COLOR_MENU_BACKEND}" class="btnInfo"
+                            (click)="infoSubTotal()">
+                            <ion-icon class="iconVerBenef" [ngStyle]="{'color': COLOR_MENU_BACKEND}" name="help-circle"
+                                class="iconoFactor">
+                            </ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col size="6">
+                        <b>{{ 'FORM-PAGO.upgrades' | translate }}:</b>
+                    </ion-col>
+
+                    <ion-col size="6">
+                        {{ upgrTotal | TasaCambioPipe :dataPlan.tasa_cambio | number : '1.2-2' }}
+                        {{ this.dataPlan.moneda }}
+                        <ion-button *ngIf="arrUpgradesAplicados.length > 0" (click)="upgrDescripXPasaj()" fill="clear"
+                            color="dark" class="btnInfo">
+                            <ion-icon class="iconoFactor" name="help-circle"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col size="6">
+                        <b>{{ 'FORM-PAGO.precio_total' | translate }}</b>
+                    </ion-col>
+
+                    <ion-col size="6" class="colPrecioTotal">
+                        <b [ngStyle]="{'color': COLOR_MENU_BACKEND}">
+                            {{ precioTotal | TasaCambioPipe :dataPlan.tasa_cambio | number : '1.2-2' }}
+                            {{ this.dataPlan.moneda }}
+                        </b>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col size="12" class="colBeneficios">
+                        <ion-button [ngStyle]="{'background': COLOR_MENU_BACKEND}" class="btnBeneficios"
+                            (click)="verBeneficios(dataPlan.idp, dataPlan.name_plan)">
+                            {{ 'FORM-PAGO.ver_beneficios' | translate }}&nbsp;
+                            <ion-icon class="iconVerBenef" [ngStyle]="{'color': 'white'}" name="eye">
+                            </ion-icon>
+                        </ion-button><br><br>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+        </ion-item>
+    </div>
+
+</ion-content>

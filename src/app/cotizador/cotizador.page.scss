@@ -1,0 +1,228 @@
+.btnMenu {
+  color: white;
+}
+
+.menu {
+  color: white;
+}
+
+.refresher {
+  background: var(--fondo-bug);
+}
+
+.tituloMenu {
+  text-align: center;
+  font-weight: bold;
+}
+
+ion-card {
+  position: relative;
+  text-align: center;
+}
+
+.logoCotiza {
+  margin-left: 15%;
+  margin-right: 15%;
+  align-content: center;
+}
+
+.divSpinner {
+  text-align: center;
+  align-content: center;
+  align-items: center;
+  .spinnerImg {
+    position: relative;
+  }
+}
+
+.tituloCat {
+  text-align: center;
+}
+
+.CategNull {
+  text-align: center;
+  align-content: center;
+  align-items: center;
+}
+
+.itemPaises {
+  text-align: center;
+  align-content: center;
+  align-items: center;
+}
+
+.tituloMenu {
+  text-align: center;
+}
+
+ion-card {
+  position: relative;
+  text-align: center;
+  image-rendering: auto;
+  margin: 0%;
+  padding: 0%;
+}
+
+.card-titles {
+  position: absolute;
+  top: 35%;
+  left: 34%;
+  align-content: center;
+  image-rendering: auto;
+  font-size: 2em;
+  width: 30%;
+  font-weight: bold;
+  color: #fff;
+}
+
+.titAvisoLogeo {
+  text-align: center;
+  margin-top: 30%;
+  color: #56bdd6;
+}
+
+ion-scroll {
+  white-space: nowrap;
+  height: 25%;
+  background: rgba(0, 0, 0, 0);
+}
+
+.scroll-zoom-wrapper {
+  text-align: center;
+}
+
+.catSelec {
+  text-align: center;
+  //margin-bottom: 10%;
+  align-content: center;
+}
+
+.pAviso {
+  text-align: center;
+}
+
+.spinnerCate {
+  text-align: center;
+  align-items: center;
+}
+
+.scrollCategorias {
+  height: 70%;
+  background-color: rgb(250, 250, 250);
+  border: 1px solid;
+}
+
+.divCateg {
+  align-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ionCard {
+  border-bottom: 1px solid black;
+}
+
+.spinnerImg {
+  position: absolute;
+  margin-top: 30%;
+  z-index: 1;
+  padding: 0%;
+  margin-bottom: 0%;
+  margin-left: 0%;
+  margin-right: 0%;
+}
+
+.imgCategory {
+  width: 100%;
+  position: relative;
+}
+
+.iconCategory {
+  font-size: 500%;
+}
+
+.tituloNamePlan {
+  font-size: 15pt;
+}
+
+.ionTextCategory {
+  text-align: justify;
+}
+
+.select {
+  min-width: 65%;
+  text-align: center;
+  align-content: center;
+  align-items: center;
+}
+
+.pPasaj {
+  text-align: center;
+}
+
+.tituloNumPasaj {
+  text-align: center;
+  margin-top: 5%;
+  padding: 0%;
+
+  .bNPasajeros {
+    font-size: 90%;
+  }
+}
+
+.rangoEdad {
+  align-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: -5px;
+}
+
+.textEdadPasajero {
+  text-align: center;
+}
+
+.btnInsertarEdad {
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  color: white;
+}
+
+.edadPasajeroPosicion {
+  text-align: right;
+  align-content: right;
+}
+
+.iconCloseUPersona {
+  padding: 0%;
+  padding: 0%;
+  font-size: 15pt;
+}
+
+.textElimPasaj {
+  text-align: center;
+}
+
+.btnCotizar {
+  align-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  margin: 0%;
+  padding: 0%;
+}
+
+.labelFechas {
+  align-content: center;
+  align-items: center;
+  text-align: center;
+  //color: black;
+}
+
+.btnFechas {
+  color: white;
+
+  :active {
+    color: white;
+  }
+}
